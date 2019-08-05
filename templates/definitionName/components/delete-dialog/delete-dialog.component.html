@@ -1,0 +1,13 @@
+<div class="usa-alert usa-alert-info">
+  <div class="usa-alert-body">
+    <h2 matDialogTitle class="usa-alert-heading">Delete {{singular}}?</h2>
+    <mat-dialog-content id="form-dialog">
+      <div class="question">
+      </div>
+    </mat-dialog-content>
+  </div>
+  <div class="actions">
+    <button mat-raised-button (click)="close('Yes')" class="buttonYes">Yes</button>
+    <button mat-raised-button color="primary" (click)="close('No')" class="buttonNo">No</button>
+  </div>
+</div>

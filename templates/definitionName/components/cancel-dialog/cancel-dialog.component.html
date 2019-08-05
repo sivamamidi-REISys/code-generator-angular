@@ -1,0 +1,18 @@
+<div class="usa-alert usa-alert-info">
+  <div class="usa-alert-body">
+    <h2 *ngIf="cancelEvent === 'cancelCreate{{singularWord}}'" matDialogTitle class="usa-alert-heading"> Cancel new {{singular}} creation? </h2>
+    <h2 *ngIf="cancelEvent === 'cancelUpdate{{singularWord}}'" matDialogTitle class="usa-alert-heading"> Cancel {{singular}} editing? </h2>
+    <mat-dialog-content id="form-dialog">
+      <div class="question">
+      </div>
+    </mat-dialog-content>
+  </div>
+  <div class="actions">
+    <button mat-raised-button (click)="close('Yes')" class=""> Yes </button>
+    <button mat-raised-button color="primary" (click)="close('No')" class="">No</button>
+  </div>
+</div>
+
+
+
+

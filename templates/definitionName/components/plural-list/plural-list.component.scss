@@ -1,0 +1,95 @@
+#screenHeader {
+    width: 100%;
+    padding: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  #add{{singularWord}}Button {
+    margin: auto;
+    width: auto;
+  }
+  
+  #add{{singularWord}}ButtonWrapper {
+    width: 35%;
+  }
+  
+  #headerSection1 {
+    float: left;
+    margin: inherit;
+    width: 55%;
+    text-align: initial;
+  }
+  
+  #headerSection2 {
+    width: 40%;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  #headerText{
+    margin: auto;
+  }
+  
+  #searchFieldWrapper{
+    margin-right: 20px;
+  }
+  
+  .usa-search.usa-search-small {
+    width: auto;
+    display: inline-block;
+    right: 0;
+  }
+  
+  #search-field-small {
+    width: 194px;
+  }
+  
+  @media only screen and (max-width:667px) {
+    #screenHeader {
+      width: 100%;
+      padding: 0;
+      position: relative;
+      display: grid;
+      align-items: center;
+    }
+    #headerSection1 {
+      float: left;
+      margin: inherit;
+      width: 55%;
+      text-align: initial;
+    }
+  
+    #headerSection2 {
+      width: initial;
+      align-items: center;
+      justify-content: flex-end;
+      display: -webkit-box;
+    }
+  }
+  
+  @media only screen and (max-width:1024px) {
+    #screenHeader {
+      width: 100%;
+      padding: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    #headerSection1 {
+      float: left;
+      margin: inherit;
+      width: 24%;
+      text-align: initial;
+    }
+  
+    #headerSection2 {
+      width: initial;
+      align-items: center;
+      justify-content: flex-end;
+      display: contents;
+    }
+  }
+  
