@@ -1,5 +1,5 @@
 import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, OnChanges, ViewChild, ChangeDetectorRef} from '@angular/core';
-import { {{pluralWord}} } from '../../models/{{plural}}.model';
+import { {{singularWord}} } from '../../models/{{plural}}.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import { {{pluralWord}}Service} from '../../services/{{plural}}.service';
 import { MatDialog } from '@angular/material/dialog';
