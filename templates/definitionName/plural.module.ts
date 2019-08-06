@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { {{pluralWord}}Routing} from './agencies-routing.module';
-import { {{pluralWord}}Component} from './components/agencies/agencies.component';
-import { {{pluralWord}}ListComponent} from './components/agencies-list/agencies-list.component';
+import { {{pluralWord}}Routing} from './{{pluralWord}}-routing.module';
+import { {{pluralWord}}Component} from './components/{{pluralWord}}/{{pluralWord}}.component';
+import { {{pluralWord}}ListComponent} from './components/{{pluralWord}}-list/{{pluralWord}}-list.component';
 import {Create{{singularWord}}Component} from './components/create-{{singular}}/create-{{singular}}.component';
-import { {{pluralWord}}Service} from './services/agencies.service';
+import { {{pluralWord}}Service} from './services/{{pluralWord}}.service';
 import {CancelDialogComponent} from './components/cancel-dialog/cancel-dialog.component';
 import { DeleteDialogComponent } from './components/delete-dialog/delete-dialog.component';
 import { Edit{{singularWord}}Component } from './components/edit-{{singular}}/edit-{{singular}}.component';
@@ -34,7 +34,7 @@ import {MaterialModule} from '../material/material.module';
   entryComponents: [
     CancelDialogComponent,
     DeleteDialogComponent,
-    View{{singularWord}}DialogComponent
+    View{{singularWord}}DialogComponent]
   providers: [
     {{pluralWord}}Service,
     {provide: APP_BASE_HREF, useValue: '/'}
