@@ -1,7 +1,7 @@
 import {AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, OnChanges, ViewChild, ChangeDetectorRef} from '@angular/core';
-import { {{pluralWord}} } from '../../models/{{singularWord}}.model';
+import { {{pluralWord}} } from '../../models/{{plural}}.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import { {{pluralWord}}Service} from '../../services/{{singularWord}}.service';
+import { {{pluralWord}}Service} from '../../services/{{plural}}.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,7 +11,7 @@ import {View{{singularWord}}DialogComponent} from '../view-{{singular}}-dialog/v
 import {UserService} from '../../../user/services/user.service';
 
 @Component({
-  selector: 'app-{{singularWord}}-list',
+  selector: 'app-{{singular}}-list',
   templateUrl: './{{singularWord}}-list.component.html',
   styleUrls: ['./{{singularWord}}-list.component.scss']
 })

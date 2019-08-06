@@ -43,7 +43,7 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
 
   get{{singularWord}}() {
     const {{singular}}Id = +this.activatedRoute.snapshot.paramMap.get('{{singular}}Id');
-    this.{{plural}}Service.get{{singularWord}}ById({{singular}}Id).subscribe(res => {
+    this.{{plural}}Service.get{{singularWord}}ById({{singular}}Id).subscribe(result => {
       if (result) {
         this.{{singular}} = result;
         this.createForms();
