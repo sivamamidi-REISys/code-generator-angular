@@ -11,9 +11,9 @@ import {View{{singularWord}}DialogComponent} from '../view-{{singular}}-dialog/v
 import {UserService} from '../../../user/services/user.service';
 
 @Component({
-  selector: 'app-{{singular}}-list',
-  templateUrl: './{{singularWord}}-list.component.html',
-  styleUrls: ['./{{singularWord}}-list.component.scss']
+  selector: 'app-{{plural}}-list',
+  templateUrl: './{{plural}}-list.component.html',
+  styleUrls: ['./{{plural}}-list.component.scss']
 })
 export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterViewChecked, AfterViewInit, OnChanges {
   {{singularWord}}: any;

@@ -3,6 +3,7 @@ import { {{pluralWord}}Service } from '../../services/{{plural}}.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CancelDialogComponent } from '../cancel-dialog/cancel-dialog.component';
+import {MatDialog} from "@angular/material"; 
 
 @Component({
   selector: 'app-edit-{{singular}}',
@@ -21,7 +22,8 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private dialog: MatDialog 
 ) { }
 
   ngOnInit() {
