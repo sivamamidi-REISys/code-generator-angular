@@ -140,11 +140,11 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
   }
 
   create{{singularWord}}() {
-    this.router.navigateByUrl('/{{singularWord}}-list/create');
+    this.router.navigateByUrl('/{{plural}}-list/create');
   }
 
   edit{{singularWord}}({{singular}}Id) {
-    this.router.navigateByUrl('/{{singularWord}}-list/edit/' + {{singular}}Id);
+    this.router.navigateByUrl('/{{plural}}-list/edit/' + {{singular}}Id);
   }
 
   view{{singularWord}}({{singular}}Id) {
