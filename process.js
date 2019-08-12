@@ -97,13 +97,13 @@ function registerHelpers() {
 
     Handlebars.registerHelper('create-row', function () {
         const result = `  <div [ngClass]="{'usa-input-error':${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)}">
-        <label for=${this.name}">${this.display}</label>
+        <label for="${this.name}">${this.display}</label>
         <div *ngIf="${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)" class="usa-input-error-message">
           <div *ngIf="${this.name}Control.hasError('required')">
             ${this.display} is required.
           </div>
         </div>
-        <input id=${this.name}" name=${this.name}" type="text" required formControlName="${this.name}">
+        <input id="${this.name}" name="${this.name}" type="text" required formControlName="${this.name}">
       </div>`;
         return new Handlebars.SafeString(result);
     });

@@ -110,7 +110,7 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
       if (t) {
         this.{{singularWord}} = t['content'];
         this.{{singularWord}}Service.refresh{{pluralWord}}.next(this.{{singularWord}});
-        this.dataSource = new MatTableDataSource<{{pluralWord}}>(this.{{singularWord}});
+        this.dataSource = new MatTableDataSource<{{singularWord}}>(this.{{singularWord}});
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.loadContent = false;
