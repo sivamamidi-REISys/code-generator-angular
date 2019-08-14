@@ -1,16 +1,18 @@
 <form class="usa-form" name="form" *ngIf="{{singular}}" [formGroup]="{{singular}}DetailsForm" id="{{singular}}EditForm">
   <fieldset class="create{{singularWord}}Wrapper">
-    <legend>Edit {{singularWord}}</legend>
+    <div>
+      <legend class="usa-legend">Edit {{singularWord}}</legend>
+    </div>
     {{#each properties}}
-        {{edit-row}}
+    {{edit-row}}
     {{/each}}
     <p>
-        <button class="usa-button usa-button--outline " (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
-          id="cancelUpdate{{singularWord}}">Cancel</button>
-        <button class="usa-input usa-input--medium" [disabled]="{{singular}}DetailsForm.invalid" (click)="update{{singularWord}}()">Update</button>
-    
-      </p>
-  </fieldset>
-  
-</form>
+      <button class="usa-button usa-button--outline " (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
+        id="cancelUpdate{{singularWord}}">Cancel</button>
+      <button class="usa-button usa-button--green" [disabled]="{{singular}}DetailsForm.invalid"
+        (click)="update{{singularWord}}()">Update</button>
 
+    </p>
+  </fieldset>
+
+</form>
