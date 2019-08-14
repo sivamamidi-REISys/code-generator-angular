@@ -1,5 +1,16 @@
+.view-section {
+  font-family: sans-serif;
+
+}
+
 .usa-input-grid {
   float: initial;
+}
+
+h3 {
+  font-family: sans-serif;
+  color: #454545;
+
 }
 
 .create{{singularWord}}Wrapper {
@@ -10,4 +21,45 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+}
+
+.view-title {
+
+  color: #07648d;
+  font-family: sans-serif;
+}
+
+
+.usa-content-list {
+  list-style-type: none;
+  padding-left: 0;
+  max-width: 72ex;
+  font-family: sans-serif;
+}
+
+ul {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+  font-family: sans-serif;
+}
+
+strong {
+  padding-left: 10px;
+}
+
+.fa-times {
+  cursor: pointer;
+  color: #757575;
+}
+
+.fa-times:hover {
+  color: #1b1b1b;
+}
+
+#underline {
+  border-top: 1px solid #07648d;
 }

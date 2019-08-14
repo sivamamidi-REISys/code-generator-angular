@@ -1,4 +1,4 @@
-<form class="usa-form-large" name="form" *ngIf="{{singular}}" [formGroup]="{{singular}}DetailsForm" id="{{singular}}EditForm">
+<form class="usa-form" name="form" *ngIf="{{singular}}" [formGroup]="{{singular}}DetailsForm" id="{{singular}}EditForm">
   <fieldset class="create{{singularWord}}Wrapper">
     <legend>Edit {{singularWord}}</legend>
     {{#each properties}}
@@ -6,9 +6,10 @@
     {{/each}}
   </fieldset>
   <p>
-    <button [disabled]="{{singular}}DetailsForm.invalid" (click)="update{{singularWord}}()">Update</button>
-    <button class="usa-button-secondary" (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
+    <button class="usa-button usa-button--outline " (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
       id="cancelUpdate{{singularWord}}">Cancel</button>
+    <button class="usa-input usa-input--medium" [disabled]="{{singular}}DetailsForm.invalid" (click)="update{{singularWord}}()">Update</button>
+
   </p>
 </form>
 

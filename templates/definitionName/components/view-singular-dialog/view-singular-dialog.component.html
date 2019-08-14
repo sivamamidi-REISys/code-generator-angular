@@ -1,15 +1,16 @@
-<form class="usa-form-large" name="form" *ngIf="{{singular}}" [formGroup]="{{singular}}DetailsForm" id="{{singular}}EditForm">
-  <fieldset class="create{{singularWord}}Wrapper">
-    <div class="view{{singularWord}}HeaderWrapper">
-      <legend>View {{singularWord}} Details</legend>
-      <a class="usa-button-secondary usa-button-unstyled" aria-label="Close modal dialog"
-        (click)="closeWindow()">Close</a>
-    </div>
+<div class="view-section">
+  <div class="view{{singularWord}}HeaderWrapper">
+    <h2 class="view-title">{{singularWord}} Details</h2>
+    <a class="usa-button--unstyled" aria-label="Close modal dialog" (click)="closeWindow()"><i
+        class="fas fa-times fa-2x"></i></a>
+  </div>
+  <hr id="underline">
+  <br>
+
+  <ul *ngIf="{{singular}}" class="usa-content-list">
     {{#each properties}}
-       {{view-row}}
+    {{view-row ../singular}}
     {{/each}}
-  </fieldset>
-</form>
+  </ul>
 
-
-
+</div>

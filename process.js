@@ -87,48 +87,58 @@ function registerHelpers() {
         return new Handlebars.SafeString(result);
     });
 
-    Handlebars.registerHelper('view-row', function () {
-        const result = ` <div>
-        <label for="${this.name}">${this.display}</label>
-        <input id="${this.name}" name="${this.name}" type="text" formControlName="${this.name}" disabled>
-      </div>`;
+    Handlebars.registerHelper('view-row', function (singular) {
+        //let q_singular = options.contexts[0][singular];
+        const result = `<li>  <label for="${this.name}">${this.display}</label>
+        <strong>{{ ${singular}.${this.name} }}</strong>
+                </li>
+                <hr>`;
+
+
+        //     const result = ` <div>
+
+        //     <input id="${this.name}" name="${this.name}" type="text" formControlName="${this.name}" disabled>
+        //   </div>`;
         return new Handlebars.SafeString(result);
     });
 
     Handlebars.registerHelper('create-row', function () {
-        const result = `  <div [ngClass]="{'usa-input-error':${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)}">
-        <label for="${this.name}">${this.display}</label>
-        <div *ngIf="${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)" class="usa-input-error-message">
+        const result = `  <div>
+        <label  class="usa-label" for="${this.name}">${this.display}</label>
+        <div *ngIf="${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)" class="usa-error-message">
           <div *ngIf="${this.name}Control.hasError('required')">
             ${this.display} is required.
           </div>
         </div>
-        <input id="${this.name}" name="${this.name}" type="text" required formControlName="${this.name}">
+        <div [ngClass]="{'usa-input--error':${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)}">
+            <input class="usa-input" id="${this.name}" name="${this.name}" type="text" required formControlName="${this.name}">
+        </div>
       </div>`;
         return new Handlebars.SafeString(result);
     });
 
     Handlebars.registerHelper('edit-row', function () {
-        const result = `  <div
-        [ngClass]="{'usa-input-error':${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)}">
-        <label for="${this.name}">${this.display}</label>
+        const result = `  <div>
+        <label class="usa-label" for="${this.name}">${this.display}</label>
         <div *ngIf="${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)"
-          class="usa-input-error-message">
+          class="usa-error-message">
           <div *ngIf="${this.name}Control.hasError('required')">
             ${this.display} is required.
           </div>
         </div>
-        <input id="${this.name}" name="${this.name}" type="text" required formControlName="${this.name}">
+        <div  [ngClass]="{'usa-input-error':${this.name}Control.invalid && (${this.name}Control.dirty || ${this.name}Control.touched)}">
+            <input class="usa-input" id="${this.name}" name="${this.name}" type="text" required formControlName="${this.name}">
+        </div>
       </div>`;
         return new Handlebars.SafeString(result);
     });
 
 
 
-    
 
 
-   
+
+
 
 }
 

@@ -1,4 +1,4 @@
-<form class="usa-form-large" name="form" [formGroup]="{{singular}}DetailsForm">
+<form class="usa-form" name="form" [formGroup]="{{singular}}DetailsForm">
   <fieldset class="create{{singularWord}}Wrapper">
     <legend>New {{singularWord}}</legend>
     {{#each properties}}
@@ -6,8 +6,8 @@
     {{/each}}
   </fieldset>
   <p>
-    <button [disabled]="{{singular}}DetailsForm.invalid" (click)="create{{singularWord}}()">Create</button>
-    <button class="usa-button-secondary" (click)="cancelCreate('cancelCreate{{singularWord}}')" id="cancel{{singularWord}}">Cancel</button>
+    <button class="usa-button usa-button--outline " (click)="cancelCreate('cancelCreate{{singularWord}}')" id="cancel{{singularWord}}">Cancel</button>
+    <button class="usa-button usa-button--green" [disabled]="{{singular}}DetailsForm.invalid" (click)="create{{singularWord}}()">Create</button>
   </p>
 </form>
 
