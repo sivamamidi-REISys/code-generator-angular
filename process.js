@@ -80,7 +80,7 @@ function registerHelpers() {
     });
 
     Handlebars.registerHelper('list-row', function () {
-        const result = `<ng-container matColumnDef="${this.name}" id="location">
+        const result = `<ng-container matColumnDef="${this.name}" id="${this.name}">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>${this.display}</th>
         <td mat-cell *matCellDef="let element"> {{element.${this.name}}} </td>
       </ng-container>`;

@@ -4,12 +4,13 @@
     {{#each properties}}
         {{edit-row}}
     {{/each}}
+    <p>
+        <button class="usa-button usa-button--outline " (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
+          id="cancelUpdate{{singularWord}}">Cancel</button>
+        <button class="usa-input usa-input--medium" [disabled]="{{singular}}DetailsForm.invalid" (click)="update{{singularWord}}()">Update</button>
+    
+      </p>
   </fieldset>
-  <p>
-    <button class="usa-button usa-button--outline " (click)="cancelUpdate('cancelUpdate{{singularWord}}')"
-      id="cancelUpdate{{singularWord}}">Cancel</button>
-    <button class="usa-input usa-input--medium" [disabled]="{{singular}}DetailsForm.invalid" (click)="update{{singularWord}}()">Update</button>
-
-  </p>
+  
 </form>
 
