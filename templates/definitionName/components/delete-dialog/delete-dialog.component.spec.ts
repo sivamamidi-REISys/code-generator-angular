@@ -106,7 +106,7 @@ describe('DeleteDialogComponent', () => {
       true,
       'Failed to open'
     );
-    const heading = overlayContainerElement.querySelector('h2');
+    const heading = overlayContainerElement.querySelector('h3');
     expect(heading.innerText).toEqual('Delete {{singularWord}}?');
 
     dialogRef.close();
