@@ -82,7 +82,7 @@ describe('Edit{{singularWord}}Component', () => {
     });
     
     {{#each properties}}
-        {{../single}}.{{name}} = "Test Property" ;
+        {{../singular}}.{{name}} = "Test Property" ;
     {{/each}}
 
     fixture.detectChanges();

@@ -74,7 +74,7 @@ describe('View{{singularWord}}DialogComponent', () => {
       {{/each}}
     });
     {{#each properties}}
-        {{../single}}.{{name}} = "Test Property" ;
+        {{../singular}}.{{name}} = "Test Property" ;
     {{/each}}
     fixture.detectChanges();
   }));

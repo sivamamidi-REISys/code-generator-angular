@@ -66,13 +66,10 @@ describe('Create{{singularWord}}Component', () => {
     fixture = TestBed.createComponent(Create{{singularWord}}Component);
     component = fixture.componentInstance;
     dialogSpy = spyOn(TestBed.get(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
-    // component.{{singular}}Types = {{singular}}Types;
-    // {{singular}}.{{singular}}Type = { name: 'testName', {{singular}}TypeId: 111 };
-    
-
     {{#each properties}}
-        {{../single}}.{{name}} = "Test Property" ;
+        {{../singular}}.{{name}} = "Test Property" ;
       {{/each}}
+     
     
     spyOn(component.router, 'navigate');
     fixture.detectChanges();
