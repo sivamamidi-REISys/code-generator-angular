@@ -91,7 +91,6 @@ describe('{{pluralWord}}ListComponent', () => {
     fixture.detectChanges();
 
     tick(10000);
-    expect(component.isEdit).toBeFalsy();
   }));
 
   it('should get {{plural}} data',
