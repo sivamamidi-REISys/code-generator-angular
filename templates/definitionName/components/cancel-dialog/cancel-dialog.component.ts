@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 export class CancelDialogComponent implements OnInit {
   cancelEvent: string;
 
-  constructor(public dialogRef: MatDialogRef<CancelDialogComponent>, private router: Router) { }
+  constructor(public dialogRef: MatDialogRef<CancelDialogComponent>, public router: Router) { }
 
   ngOnInit() {
   }

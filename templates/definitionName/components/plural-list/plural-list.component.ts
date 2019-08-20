@@ -39,7 +39,7 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
 
     constructor(private readonly {{singularWord}}Service: {{pluralWord}}Service,
         private readonly route: ActivatedRoute,
-        private readonly router: Router,
+        public readonly router: Router,
         private dialog: MatDialog,
         private readonly userService: UserService,
         private readonly changeDetectorRef: ChangeDetectorRef) {

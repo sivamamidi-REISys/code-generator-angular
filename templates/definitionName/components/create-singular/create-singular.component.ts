@@ -20,7 +20,7 @@ export class Create{{singularWord}}Component implements OnInit {
   message: string = '';
 
   constructor(private fb: FormBuilder,
-              private router: Router,
+              public router: Router,
               private readonly route: ActivatedRoute,
               private {{plural}}Service: {{pluralWord}}Service,
               private dialog: MatDialog) {}

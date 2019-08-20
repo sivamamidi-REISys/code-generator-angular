@@ -21,7 +21,7 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
   constructor(private readonly {{plural}}Service: {{pluralWord}}Service,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private router: Router,
+    public router: Router,
     private readonly route: ActivatedRoute,
     private dialog: MatDialog 
 ) { }
