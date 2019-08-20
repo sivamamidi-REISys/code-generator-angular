@@ -90,7 +90,7 @@ function registerHelpers() {
     Handlebars.registerHelper('view-row', function (singular) {
         //let q_singular = options.contexts[0][singular];
         const result = `<li>  <label for="${this.name}">${this.display}</label>
-        <strong>{{ ${singular}.${this.name} }}</strong>
+        <strong id="${this.name}">{{ ${singular}.${this.name} }}</strong>
                 </li>
                 <hr>`;
 

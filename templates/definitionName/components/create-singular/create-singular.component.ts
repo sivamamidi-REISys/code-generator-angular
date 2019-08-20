@@ -77,37 +77,7 @@ export class Create{{singularWord}}Component implements OnInit {
     dialogRef.componentInstance.cancelEvent = event;
   }
 
-  validateLength(len: number, checkCase: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      const value = control.value.toString();
-      if (value) {
-        switch (checkCase) {
-          case 'checkMaxLen' : {
-            if (value.length > len) {
-              return {'maxlength': {value}};
-            }
-            break;
-          }
-          case 'checkMinLen' : {
-            if (value.length < len) {
-              return {'minlength': {value}};
-            }
-            break;
-          }
-          case 'checkFixLen' : {
-            if (value.length != len) {
-              return {'fixlength': {value}};
-            }
-            break;
-          }
-        }
-
-      }
-      return null;
-    };
-  }
-
-
+  
   disableControls(): boolean {
     return !this.isEdit && !!this.userId;
   }

@@ -59,10 +59,6 @@ export class View{{singularWord}}DialogComponent implements OnInit {
     return !this.isEdit && !!this.userId;
   }
 
-  {{#each properties}}
-      get {{name}}Control(): FormControl {
-        return this.{{../singular}}DetailsForm.get('{{name}}') as FormControl;
-      }
-  {{/each}}
+ 
 
 }
