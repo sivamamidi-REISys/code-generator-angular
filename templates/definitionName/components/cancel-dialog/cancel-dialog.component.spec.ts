@@ -20,6 +20,10 @@ describe('CancelDialogComponent', () => {
   let component: CancelDialogComponent;
   let fixture: ComponentFixture<CancelDialogComponent>;
 
+  const dialogMock = {
+    close: () => { }
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -37,7 +41,7 @@ describe('CancelDialogComponent', () => {
         SessionService,
         {{pluralWord}}Service,
         OktaAuthService,
-        {provide: MatDialogRef, useValue: {}}
+        { provide: MatDialogRef, useValue: dialogMock }
       ]
     })
     .compileComponents();
@@ -51,5 +55,21 @@ describe('CancelDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should close dialog and navigate to listing page if event === Yes', () => {
+    const spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    spyOn(component.router, 'navigateByUrl').and.stub();
+    component.close('Yes');
+
+    expect(spy).toHaveBeenCalled();
+    expect(component.router.navigateByUrl).toHaveBeenCalled();
+  });
+
+  it('should close dialog if event === No', () => {
+    const spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    component.close('No');
+
+    expect(spy).toHaveBeenCalled();
   });
 });
