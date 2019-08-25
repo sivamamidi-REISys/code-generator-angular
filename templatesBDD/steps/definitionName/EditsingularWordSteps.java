@@ -11,12 +11,12 @@ public class Edit{{singularWord}}Steps extends ScenarioSteps{
 
     {{singularWord}}Page {{singular}}Page;
 
-    @And("I enter text for \"([^\"]*)\"")
-    public void enterTextForEdit{{singularWord}}(String data){
-        {{singular}}Page.enterTextForEdit{{singularWord}}(data);
+    @And("I enter text for {{singular}}")
+    public void enterTextForEdit{{singularWord}}(){
+        {{singular}}Page.enterTextForEdit{{singularWord}}();
     }
 
-    @And("I click on Edit Button$")
+    @And("I click on Edit button$")
     public void clickButton(){
         {{singular}}Page.clickEditButton();
     }

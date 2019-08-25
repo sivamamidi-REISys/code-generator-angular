@@ -24,19 +24,19 @@ public class Create{{singularWord}}Page extends PageObject {
     }
 
 
-    public void enterTextForCreate{{singularWord}}(String data) {
+    public void enterTextForCreate{{singularWord}}() {
         checkForPresenceOfElement(CREATE_BUTTON);
         checkForPageLoadComplete();
-        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),data)
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),"{{singular}}");
         {{#each properties}}
              enterValue({{nameUpperCase}}, Utilities.getStringValueFromJsonObject(dataObj, "{{name}}"));
         {{/each}}
     }
 
-     public void enterTextForEdit{{singularWord}}(String data) {
+     public void enterTextForEdit{{singularWord}}() {
         checkForPresenceOfElement(EDIT_BUTTON);
         checkForPageLoadComplete();
-        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),data)
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),"{{singular}}");
         {{#each properties}}
              enterValue({{nameUpperCase}}, Utilities.getStringValueFromJsonObject(dataObj, "{{name}}"));
         {{/each}}

@@ -1,76 +1,42 @@
-package gov.gsa.comet.pages.agency;
+package gov.gsa.comet.pages.{{singular}};
 
-import org.openqa.selenium.By;
-
+import com.google.gson.JsonObject;
 import gov.gsa.comet.cucumber.PageObject;
+import gov.gsa.comet.helpers.Utilities;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
-public class AgencyListingPage extends PageObject {
+public class List{{singularWord}}Page extends PageObject {
 
-    private static final By AGENCY_LISTING_TITLE = By.id("headerText");
-    private static final By ADD_AGENCY = By.id("addAgencyButton");
-    private static final By SEARCH_AGENCY = By.id("search-field-small");
-    private static final By DELETE_MODAL = By.xpath("//app-delete-dialog/div");
-    private static final By YES_BUTTON = By.xpath("//button[text()='Yes']");
-    private static final By AGENCY_LISTING_LINK = By.id("agenciesLink");
-    
+    private static final By TITLE = By.id("headerText");
+    private final WebElement TABLE = findElement(By.id("{{singular}}-table"));
+    private static final int TABLEHEADERROWNUMBER = 1;
+
     @Override
     public String getPageName() {
-        return "Agency Listing Page";
+        return "List {{singularWord}} Page";
     }
-    
+
     @Override
     public void checkForPageLoadComplete() {
-        checkForPresenceOfElement(AGENCY_LISTING_TITLE);
         testPageFor508();
-    }
-    
-    public void clickOnAgencyListingLink() {
-        clickElement(AGENCY_LISTING_LINK);
     }
 
     public String getPageHeaderText() {
-        return getValueOfElement(AGENCY_LISTING_TITLE);
+        return getValueOfElement(TITLE);
     }
-    
-    public void searchForAgency(String agencyName) {
-        enterValue(SEARCH_AGENCY, agencyName);
+
+    public String verifyTableHeaders(){
+        return getNthTableRow(TABLE, TABLEHEADERROWNUMBER).getText();
     }
-    
-    public boolean verifyAgencyNamePresent(String agencyName) {
-        return checkForPresenceOfElement(By.xpath("//table//td[contains(text(), '" +  agencyName +"')]"));
+
+    public String verifyTableContains(String property, int colNumber){
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), "{{singular}}");
+        String value = Utilities.getStringValueFromJsonObject(dataObj, property);
+        WebElement element = getRowWithCellValue(TABLE, colNumber, value);
+        if(element != null){
+            return element.getText();
+        }
+        return null;
     }
-    
-    public boolean verifyAgencyNameNotPresent(String agencyName) {
-        return !checkForPresenceOfElementWithoutWaiting(By.xpath("//table//td[contains(text(), '" +  agencyName +"')]"));
-    }
-    
-    public void deleteAgency(String agencyName) {
-        searchForAgency(agencyName);
-        clickElement(By.xpath("//table//td[contains(text(), '" +  agencyName +"')]/..//a[text()= 'Delete']"));
-        checkForPresenceOfElement(DELETE_MODAL);
-        clickYesButton();
-    }
-    
-    public void editAgency(String agencyName) {
-        searchForAgency(agencyName);
-        clickElement(By.xpath("//table//td[contains(text(), '" +  agencyName +"')]/..//a[text()= 'Edit']"));
-    }
-    
-    public void viewAgency(String agencyName) {
-        searchForAgency(agencyName);
-        clickElement(By.xpath("//table//td[contains(text(), '" +  agencyName +"')]/..//a[text()= 'View']"));
-    }
-    
-    public void clickOnAddAgency() {
-        clickElement(ADD_AGENCY);
-    }
-    
-    public void clickYesButton() {
-        clickElement(YES_BUTTON);
-    }
-    
-    public boolean addAgencyIsEnabled() {
-        return findElement(ADD_AGENCY).isEnabled();
-    }
-    
 }

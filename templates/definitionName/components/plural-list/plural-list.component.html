@@ -27,7 +27,7 @@
     </div>
   </div>
   <div *ngIf="!loadContent; else loadingPlaceHolderBlock;">
-    <table class="usa-table-borderless" mat-table #table [dataSource]="dataSource" matSort>
+    <table class="usa-table-borderless" id="{{singular}}-table" mat-table #table [dataSource]="dataSource" matSort>
       {{#each properties}}
       {{list-row}}
       {{/each}}
