@@ -1,0 +1,11 @@
+{
+"{{singular}}" : 
+
+{
+ {{#each properties}}
+    "{{name}}" : "Test {{name}}",
+{{/each}}
+
+}
+
+}
