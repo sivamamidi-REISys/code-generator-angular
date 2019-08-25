@@ -11,7 +11,7 @@ public class Edit{{singularWord}}Steps extends ScenarioSteps{
 
     {{singularWord}}Page {{singular}}Page;
 
-    @And("I enter text for {{singular}}")
+    @And("I enter text for {{singularWord}}")
     public void enterTextForEdit{{singularWord}}(){
         {{singular}}Page.enterTextForEdit{{singularWord}}();
     }
