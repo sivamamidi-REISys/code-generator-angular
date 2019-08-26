@@ -1,59 +1,39 @@
 exports.configuration = {
   "destinationPath": "y:\\sample",
   "definitions": {
-    "Announcement": {
+    "User": {
       "actionType": "crud",
-      "pluralWord": "Announcements",
-      "uniqueId": "announcementId",
+      "pluralWord": "Users",
+      "uniqueId": "userId",
       "properties": [
         {
-          "name": "announcementId",
-          "display": "Id",
-          "type": "integer",
-          "required": true
-        },
-        {
-          "name": "title",
-          "display": "Announcement Title",
+          "name": "firstName",
+          "display": "First Name",
           "type": "string",
           "required": true
         },
         {
-          "name": "description",
-          "display": "Description",
+          "name": "lastName",
+          "display": "Last Name",
           "type": "string",
           "required": true
         },
         {
-          "name": "isActive",
-          "display": "isActive",
-          "type": "boolean",
-          "required": false
+          "name": "email",
+          "display": "Email",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "roles",
+          "display": "Roles",
+          "type": "string",
+          "required": true
         }
       ]
 
     },
-    "Agency": {
-      "actionType": "crud",
-      "pluralWord": "Agencies",
-      "uniqueId": "agencyId",
-      "properties": [
-        {
-          "name": "title",
-          "display": "Agency Title",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "description",
-          "display": "Description",
-          "type": "string",
-          "required": true
-        }
-        
-      ]
-
-    },
+   
     "Team": {
       "actionType": "crud",
       "pluralWord": "Teams",
@@ -64,20 +44,7 @@ exports.configuration = {
           "display": "Team Name",
           "type": "string",
           "required": true
-        },
-        {
-          "name": "description",
-          "display": "Description",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "comments",
-          "display": "Comments",
-          "type": "string",
-          "required": true
         }
-        
       ]
 
     }
