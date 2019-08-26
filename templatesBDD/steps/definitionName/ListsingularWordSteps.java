@@ -2,7 +2,7 @@ package gov.gsa.comet.steps.{{singular}};
 
 import com.google.gson.JsonObject;
 import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
+import cucumber.api.java.en.*;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import gov.gsa.comet.cucumber.ExecutionContext;
@@ -10,6 +10,7 @@ import gov.gsa.comet.helpers.Utilities;
 import gov.gsa.comet.pages.{{singular}}.List{{singularWord}}Page;
 import net.thucydides.core.steps.ScenarioSteps;
 import org.junit.Assert;
+
 
 public class List{{singularWord}}Steps extends ScenarioSteps {
 

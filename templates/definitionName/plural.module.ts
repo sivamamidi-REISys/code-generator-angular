@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { {{pluralWord}}Routing} from './{{pluralWord}}-routing.module';
+import { {{pluralWord}}Routing} from './{{plural}}-routing.module';
 import { {{pluralWord}}Component} from './components/{{plural}}/{{plural}}.component';
 import { {{pluralWord}}ListComponent} from './components/{{plural}}-list/{{plural}}-list.component';
 import {Create{{singularWord}}Component} from './components/create-{{singular}}/create-{{singular}}.component';

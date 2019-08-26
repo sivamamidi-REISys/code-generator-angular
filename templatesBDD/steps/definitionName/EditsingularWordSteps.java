@@ -1,10 +1,13 @@
 package gov.gsa.comet.steps.{{singular}};
 
 import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
+import cucumber.api.java.en.*;
+import cucumber.api.java.en.Then;
 import gov.gsa.comet.pages.{{singular}}.{{singularWord}}Page;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
+import net.thucydides.core.steps.ScenarioSteps;
+import org.junit.Assert;
 
 
 public class Edit{{singularWord}}Steps extends ScenarioSteps{
@@ -23,14 +26,14 @@ public class Edit{{singularWord}}Steps extends ScenarioSteps{
 
 
     @And("^I click on Edit action for first {{singularWord}}$")
-    public void editUser() {
-        userPage.clickEditActionButton();
+    public void edit{{singularWord}}() {
+        {{singular}}Page.clickEditActionButton();
     }
 ​
     @Then("^I am able to verify {{singularWord}} data for Edit page$")
     public void iAmAbleToVerify{{singularWord}}DataForEditPage() {
        {{#each properties}}
-            Assert.assertNotNull(list{{../singularWord}}Page.verifyTableContains("{{name}}",  1));
+            Assert.assertNotNull({{singular}}Page.verifyTableContains("{{name}}",  1));
         {{/each}}
     }
 }

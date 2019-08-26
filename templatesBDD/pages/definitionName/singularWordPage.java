@@ -6,9 +6,9 @@ import org.openqa.selenium.By;
 public class {{singularWord}}Page extends PageObject {
 
     private static final By CREATE_BUTTON = By.id("createButton");
-    private static final By EDIT_BUTTON = By.id("editButton");
+    private static final By EDIT_BUTTON = By.id("updateButton");
     private static final By CANCEL_BUTTON = By.id("cancelButton");
-    private final WebElement TABLE = findElement(By.id("{{singular}}-table"))
+    private final WebElement TABLE = findElement(By.id("{{singular}}-table"));
     private static final By EDIT_ACTION_FIRST_ROW = By.id("");
 
     {{#each properties}}

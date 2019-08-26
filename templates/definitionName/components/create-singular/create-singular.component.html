@@ -8,9 +8,9 @@
     {{/each}}
     <p>
       <button class="usa-button usa-button--outline " (click)="cancelCreate('cancelCreate{{singularWord}}')"
-        id="cancel{{singularWord}}">Cancel</button>
+        id="cancelButton">Cancel</button>
       <button class="usa-button usa-button--green" [disabled]="{{singular}}DetailsForm.invalid"
-        (click)="create{{singularWord}}()">Create</button>
+      id="createButton" (click)="create{{singularWord}}()">Create</button>
     </p>
   </fieldset>
 

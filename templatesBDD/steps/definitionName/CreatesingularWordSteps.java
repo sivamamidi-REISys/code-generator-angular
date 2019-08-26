@@ -2,10 +2,17 @@ package gov.gsa.comet.steps.{{singular}};
 
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import gov.gsa.comet.pages.{{singular}}.{{singularWord}}Page;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
+
+import cucumber.api.PendingException;
+import cucumber.api.java.en.*;
+import gov.gsa.comet.pages.{{singular}}.{{singularWord}}Page;
+
+import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.Steps;
+import net.thucydides.core.steps.ScenarioSteps;
 
 public class Create{{singularWord}}Steps extends ScenarioSteps{
 
