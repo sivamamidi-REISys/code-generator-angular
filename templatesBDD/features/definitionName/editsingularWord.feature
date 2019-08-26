@@ -7,5 +7,7 @@ Background: User logs in
 @positive
 Scenario: Edit a {{singularWord}}
     Given I am on "{{singularWord}}" page
-    And I enter text for {{singularWord}}
-    And I click on Edit button
+    And I click on Edit action for first {{singularWord}}
+    And I enter data for edit {{singularWord}} page
+    And I click on Edit button for {{singularWord}} page
+    Then I am able to verify {{singularWord}} data for Edit page

@@ -24,7 +24,7 @@ List{{singularWord}}Page list{{singularWord}}Page;
 
     @Then("^I am able to verify {{singularWord}} page table header \"([^\"]*)\"$")
     public void verifyTableHeader(String headerName) {
-        Assert.assertTrue(headerName.contains(list{{singularWord}}Page.verifyTableHeaders()));
+        Assert.assertTrue(list{{singularWord}}Page.verifyTableHeaders().contains(headerName));
     }
 
 

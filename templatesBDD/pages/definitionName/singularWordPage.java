@@ -7,7 +7,9 @@ public class {{singularWord}}Page extends PageObject {
 
     private static final By CREATE_BUTTON = By.id("createButton");
     private static final By EDIT_BUTTON = By.id("editButton");
-   
+    private static final By CANCEL_BUTTON = By.id("cancelButton");
+    private final WebElement TABLE = findElement(By.id("{{singular}}-table"))
+    private static final By EDIT_ACTION_FIRST_ROW = By.id("");
 
     {{#each properties}}
          private static final By {{nameUpperCase}} = By.id("{{name}}");
@@ -25,7 +27,7 @@ public class {{singularWord}}Page extends PageObject {
 
 
     public void enterTextForCreate{{singularWord}}() {
-        checkForPresenceOfElement(CREATE_BUTTON);
+        checkForPresenceOfElement(CANCEL_BUTTON);
         checkForPageLoadComplete();
         JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),"{{singular}}");
         {{#each properties}}
@@ -34,7 +36,7 @@ public class {{singularWord}}Page extends PageObject {
     }
 
      public void enterTextForEdit{{singularWord}}() {
-        checkForPresenceOfElement(EDIT_BUTTON);
+        checkForPresenceOfElement(CANCEL_BUTTON);
         checkForPageLoadComplete();
         JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(),"{{singular}}");
         {{#each properties}}
@@ -49,5 +51,19 @@ public class {{singularWord}}Page extends PageObject {
 
     public void clickEditButton() {
         clickElement(EDIT_BUTTON);
+    }
+
+    public void clickEditActionButton() {
+        clickElement(EDIT_ACTION_FIRST_ROW);
+    }
+​
+    public String verifyTableContains(String property, int colNumber) {
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), "{{singular}}");
+        String value = Utilities.getStringValueFromJsonObject(dataObj, property);
+        WebElement element = getRowWithCellValue(TABLE, colNumber, value);
+        if(element != null){
+            return element.getText();
+        }
+        return null;
     }
 }

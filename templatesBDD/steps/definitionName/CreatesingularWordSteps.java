@@ -11,12 +11,12 @@ public class Create{{singularWord}}Steps extends ScenarioSteps{
 
     {{singularWord}}Page {{singular}}Page;
 
-    @And("I enter text for {{singularWord}}")
+    @And("I enter data for create {{singularWord}}")
     public void enterTextForCreate{{singularWord}}(){
         {{singular}}Page.enterTextForCreate{{singularWord}}();
     }
 
-    @And("I click on Create button$")
+    @And("I click on Create button for {{singularWord}}")
     public void clickButton(){
         {{singular}}Page.clickCreateButton();
     }
