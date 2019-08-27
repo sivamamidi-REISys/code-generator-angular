@@ -1,5 +1,9 @@
 exports.configuration = {
   "destinationPath": "y:\\sample",
+  "pipeline":{
+    name: '',
+    environmentName: 'jcomet'
+  },
   "definitions": {
     "User": {
       "actionType": "crud",
