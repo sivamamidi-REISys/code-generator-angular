@@ -1,0 +1,5 @@
+APPLICATION_NAME=gsa-comet-agency-ui-__APPLICATION_VERSION__
+APPLICATION_VERSION=__APPLICATION_VERSION__
+NAMESPACE=gsa-comet-feature
+DOCKER_REGISTRY_PUSH_SECRET=docker-nexus
+DOCKER_REGISTRY=nexus-registry-gsa-comet-build.apps.scomet.reidevops.net/repository/docker

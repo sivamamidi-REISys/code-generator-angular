@@ -1,0 +1,551 @@
+#!groovy
+// This script works with native Jenkins pipeline
+// Jenkins declarative Pipeline as it is the future: https://stackoverflow.com/questions/44657896/jenkins-pipeline-jenkinsfile-node-and-pipeline-directives
+library identifier: "pipeline-library@master",
+        retriever: modernSCM(
+                [
+                        $class: "GitSCMSource",
+                        remote: "https://github.com/REI-Systems/pipeline-library.git"
+                ]
+        )
+
+// Define variables for the pipeline usage
+def sonarLogin, sonarPassword
+def DOCKERFILE_PATH, APPLICATION_BUILD_NAME, DOCKER_REGISTRY, SONARQUBE_SECRET, SONARQUBE_URL, APP_VERSION
+
+openshift.withCluster() {
+    // Openshift Namespace
+    env.NAMESPACE = openshift.project()
+
+    // Jenkins App Name
+    env.JENKINS_APP_NAME = "${JOB_NAME}".replaceAll(/-build.*/, '')
+    echo "Starting Pipeline for ${JENKINS_APP_NAME}..."
+
+    // Define Namespace for other environments
+    env.DEV = "gsa-comet-dev" // Dev environment
+    env.STAGE = "gsa-comet-stage" // Stage Environment
+    env.PROD = "gsa-comet-prod" // Prod environment
+    env.BUILD = "${env.NAMESPACE}" // Build environment
+    env.FEATURE = "gsa-comet-feature" // Feature environment
+
+    // Define environment variables for this job
+    DOCKERFILE_PATH = "Dockerfile" // Path to dockerfile in this Repo
+    APPLICATION_BUILD_NAME = "gsa-comet-agency-ui" // Name of the OpenShift `BuildConfig` to build our ImageStream with the artifacts generated in this job
+    DOCKER_REGISTRY = "nexus-registry-gsa-comet-build.apps.scomet.reidevops.net/repository/docker" // Docker Registry where the built image will be pushed and scanned from
+    SONARQUBE_URL = "http://sonarqube:9000"
+    SONARQUBE_SECRET = "gsa-comet-sonarqube-secret"
+    APP_VERSION = "latest" // Image tag to be pushed to private docker registry (Nexus)
+}
+
+println("env.BRANCH_NAME:" + env.BRANCH_NAME)
+println("env.NAMESPACE:" + env.NAMESPACE)
+println("env.JENKINS_APP_NAME:" + env.JENKINS_APP_NAME)
+println("env.BUILD :" + env.BUILD )
+println("env.DEV:" + env.DEV)
+println("env.STAGE:" + env.STAGE)
+println("env.PROD:" + env.PROD)
+println("DOCKERFILE_PATH: ${DOCKERFILE_PATH}")
+println("APPLICATION_BUILD_NAME: ${APPLICATION_BUILD_NAME}")
+println("PROJECT_NAME: " + env.PROJECT_NAME)
+println("DOCKER_REGISTRY: ${DOCKER_REGISTRY}")
+println("env.BUILD_NUMBER:" + env.BUILD_NUMBER)
+
+pipeline {
+    agent {
+      // Use our custom jenkins-slave
+      label 'nodejs10'
+    }
+
+    options {
+        // set a timeout of 20 minutes for this pipeline
+        timeout(time: 40, unit: 'MINUTES')
+    }
+
+    // Pipeline Stages start here
+    // Requeres at least one stage
+    stages {
+
+        stage('Checkout SCM & Initialize') {
+            steps {
+                script {
+                    checkout scm: scm
+                    // Turn off Git's SSL cert check, uncomment if needed
+                    // sh 'git config --global http.sslVerify false'
+                    println("env.BRANCH_NAME:" + env.BRANCH_NAME)
+                    println("env.GIT_COMMIT:" + env.GIT_COMMIT.substring(0, 6))
+                    println("env.CHANGE_ID:" + env.CHANGE_ID)
+                    // print out all environments
+                    sh 'printenv'
+                    sh "mvn -version"
+                    sh "npm -v"
+                    sh "node -v"
+
+                    // setup application version and name if this branch requires app on demand
+                    if (env.BRANCH_NAME.startsWith('feature-')) {
+                        APP_VERSION = env.BRANCH_NAME.replaceAll('/', '')
+                        // override the `APPLICATION_BUILD_NAME`
+                        APPLICATION_BUILD_NAME = "${APPLICATION_BUILD_NAME}-${APP_VERSION}"
+                    } else if (env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) {
+                        // get the feature branch name from different variable when this is a PR case and not a commit to the feature branch itself
+                        APP_VERSION = env.CHANGE_BRANCH.replaceAll('/', '')
+                        // override the `APPLICATION_BUILD_NAME`
+                        APPLICATION_BUILD_NAME = "${APPLICATION_BUILD_NAME}-${APP_VERSION}"
+                    }
+                }
+            }
+        }
+
+        // Checkout source code
+        // This is required as Pipeline code is originally checkedout to
+        // Jenkins Master but this will also pull this same code to this slave
+        stage('Install Dev Modules') {
+            when {
+                expression {
+                    return ((env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) || env.BRANCH_NAME.startsWith('feature-') || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                script {
+                    notifySlack('STARTED', 'Job started!')
+
+                    // Report back to github: Status Check PENDING
+                    notifyGithubStatusCheck('PENDING', 'Continuous integration started!')
+
+                    // Report back to github: Status Check PENDING
+                    notifyGithubStatusCheck('PENDING', 'Continuous integration: Build the App!')
+
+                    //sh 'npm config set registry https://nexus-gsa-comet-build.apps.scomet.reidevops.net/repository/npm/'
+                    sh 'npm install'
+                }
+            }
+        }
+
+        // Run Maven unit tests
+        stage('Unit Test') {
+            when {
+                expression {
+                    return ((env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) || env.BRANCH_NAME.startsWith('feature-') || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                // Report back to github: Status Check PENDING
+                notifyGithubStatusCheck('PENDING', 'Continuous integration: Run unit test!')
+
+                sh 'CI=true npm run test:headless'
+            }
+            post {
+                always {
+                    // publish  report
+                    publishHTML(target: [
+                      reportDir            : "./reports/coverage",
+                      reportFiles          : 'index.html',
+                      reportName           : 'Istanbul Report (Code Coverage)',
+                      keepAll              : true,
+                      alwaysLinkToLastBuild: true,
+                      allowMissing         : false
+                    ])
+                }
+            }
+        }
+
+        stage('SonarQube Code Analysis') {
+            when {
+                expression {
+                    return ((env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) || env.BRANCH_NAME.startsWith('feature-') || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                // Report back to github: Status Check PENDING
+                notifyGithubStatusCheck('PENDING', 'Continuous integration: Run code analysis!')
+
+                script {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.NAMESPACE}-${SONARQUBE_SECRET}", passwordVariable: 'pass', usernameVariable: 'user']]) {
+                        sonarLogin = '${user}'
+                        sonarPassword = '${pass}'
+                        // Run Sonar in this block would result into authorization issue. As the ${user} and ${pass} are encrypted ***** **** instead of plan values
+                    }
+
+                    withSonarQubeEnv('SonarQube') {
+                        // Create a new SonarQube analysis and dashboard for this new/updated feature branch / app
+                        def additionalParams =  (env.BRANCH_NAME.startsWith('feature-')) ? " -Dsonar.projectKey=${APPLICATION_BUILD_NAME} -Dsonar.projectName=${APPLICATION_BUILD_NAME} -Dsonar.projectVersion=${env.GIT_COMMIT.substring(0, 6)}" : ""
+
+                        // Run Sonar in this block to ensure user/pass are not encrypted
+                        sh "sonar-scanner -Dsonar.host.url=${SONARQUBE_URL} -Dsonar.login=${sonarLogin} -Dsonar.password=${sonarPassword} ${additionalParams}"
+                    }
+
+                    // try again when JENKINS route has SSL valid: https://stackoverflow.com/questions/45693418/sonarqube-quality-gate-not-sending-webhook-to-jenkins
+                    // sleep(10)
+                    timeout(time: 5, unit: 'MINUTES') { // Just in case something goes wrong, pipeline will be killed after a timeout
+                        def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                        echo "Pipeline quality gate status: ${qg.status}"
+                        if (qg.status == 'ERROR') {
+                            echo "Pipeline aborted due to quality gate failure: ${qg.status}"
+                            // TODO: swap the comment out the 2 lines below to mark the build as failed when quality gate failed
+                            input message: 'SQ Quality Gate Failed, continue?'
+                            //error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+
+        // Build Container Image using the artifacts produced in previous stages
+        stage('Build Image') {
+            when {
+                expression {
+                    return (env.BRANCH_NAME.startsWith('feature-') || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                script {
+                    // Build the application
+                    // Copy the resulting artifacts including `Dockerfile` into common directory `oc-build` that will be the entry point for Docker build
+                    sh """
+                       npm run prod
+                       rm -rf oc-build && mkdir -p oc-build
+                       cp -rfv dist oc-build/ 2> /dev/null
+                       cp Dockerfile oc-build/
+                       cp package.json oc-build/
+                       cp -rfv config oc-build/
+                       cp -rfv nginx oc-build/
+                       ls -lsa oc-build/
+                    """
+
+                    // Multi-branch workflow for Build and Tag Image based based on the env.BRANCH_NAME
+                    if (env.BRANCH_NAME == 'develop') {
+                        // Step 1: Kick off the build image then use `buildConfig`: ${APPLICATION_BUILD_NAME} to push it to the configured repo
+                        binaryBuild(projectName: env.BUILD, buildConfigName: "${APPLICATION_BUILD_NAME}", artifactsDirectoryName: "oc-build", buildFrom: "--from-dir")
+
+                        // Step 2: Tag the image that was built and pushed in step 1 to OC ImageStream
+                        sh """
+                        oc tag --source=docker ${DOCKER_REGISTRY}/${APPLICATION_BUILD_NAME}:${APP_VERSION} ${env.BUILD}/${APPLICATION_BUILD_NAME}:${APP_VERSION}
+                        """
+                    } else { // case if it is 'PR-'or 'feature-'
+                        openshift.withCluster() {
+                            openshift.withProject("${env.FEATURE}") {
+                                // Check whether this feature branch already's app already created or not
+                                if (!openshift.selector("bc", "${APPLICATION_BUILD_NAME}").exists()) {
+                                    // Define Openshift templates to spin up application on demand
+                                    def deployOpenshiftTemplatePath = "./openshift/templates/deployment.yaml"
+                                    def deployOpenshiftParamsPath = "./openshift/params/deployment-feature"
+                                    def buildOpenshiftTemplatePath = "./openshift/templates/build.yaml"
+                                    def buildOpenshiftParamsPath = "./openshift/params/build-feature"
+
+                                    // Replace `__APPLICATION_VERSION__` variables in openshift params files
+                                    sh """
+                                    sed -i 's@__APPLICATION_VERSION__@${APP_VERSION}@' ${deployOpenshiftParamsPath}
+                                    sed -i 's@__APPLICATION_VERSION__@${APP_VERSION}@' ${buildOpenshiftParamsPath}
+                                    """
+
+                                    // Spin up the application on demand for this feature branch
+                                    sh """
+                                    oc process -f ${deployOpenshiftTemplatePath} --param-file=${deployOpenshiftParamsPath} --ignore-unknown-parameters=true | oc apply -f-
+                                    sleep 5
+                                    oc process -f ${buildOpenshiftTemplatePath} --param-file=${buildOpenshiftParamsPath} --ignore-unknown-parameters=true | oc apply -f-
+                                    """
+                                }
+
+                                // Step 1: Kick off the build image then use `buildConfig`: ${APPLICATION_BUILD_NAME} to push it to the configured repo
+                                binaryBuild(projectName: env.FEATURE, buildConfigName: "${APPLICATION_BUILD_NAME}", artifactsDirectoryName: "oc-build", buildFrom: "--from-dir")
+
+                                // Step 2: Tag the image that was built and pushed in step 1 to OC ImageStream. Always keep ImageStream as `latest` to trigger the default deployment on `env.FEATURE`
+                                sh """
+                                oc tag --source=docker ${DOCKER_REGISTRY}/${APPLICATION_BUILD_NAME}:${APP_VERSION} ${env.FEATURE}/${APPLICATION_BUILD_NAME}:${APP_VERSION}
+                                """
+
+                                // Verify the newly deployed app in feature environment
+                                verifyDeployment(projectName: env.FEATURE, targetApp: "${APPLICATION_BUILD_NAME}")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Twistlock Scan') {
+            when {
+                expression {
+                    return ((env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) || env.BRANCH_NAME.startsWith('feature-') || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                // Report back to github: Status Check PENDING
+                notifyGithubStatusCheck('PENDING', 'Continuous integration: Run Twistlock scan!')
+
+                twistlockScan ca: '',
+                    repository: '${DOCKER_REGISTRY}',
+                    tag: '${APP_VERSION}',
+                    containerized: true,
+                    cert: '',
+                    compliancePolicy: 'critical',
+                    dockerAddress: 'unix:///var/run/docker.sock',
+                    gracePeriodDays: 0,
+                    ignoreImageBuildTime: true,
+                    image: env.BRANCH_NAME == 'develop' ? '${env.BUILD}/${APPLICATION_BUILD_NAME}':'${env.FEATURE}/${APPLICATION_BUILD_NAME}', // Identify the namespace where the image was pushed to based on the commit branch.
+                    key: '',
+                    logLevel: 'true',
+                    //policy: 'critical', // Use this option to mark the build as failed if scan is not clean
+                    policy: 'warn',
+                    requirePackageUpdate: false,
+                    timeout: 10
+            }
+        }
+
+        stage('Promote from Build to Dev') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                }
+            }
+            steps {
+                tagImage(sourceImageName: "${APPLICATION_BUILD_NAME}", sourceImagePath: env.BUILD, toImagePath: env.DEV)
+            }
+        }
+
+        stage ('Verify Deployment to Dev') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                }
+            }
+            steps {
+                verifyDeployment(projectName: env.DEV, targetApp: "${APPLICATION_BUILD_NAME}")
+            }
+        }
+
+        stage ('ZAP: Start') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                    // return env.BRANCH_NAME == 'feature-zap' //TODO: remove me
+                }
+            }
+            steps {
+                script {
+                    sh "ls -lsa ."
+                    sh "ls -lsa /zap"
+                    sh "/zap/zap-x.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name='.*' -config api.addrs.addr.regex=true -config api.disablekey=true &"
+                    sh """
+                          # Save ZAP's PID to use later
+                          ZAP_PID=\$!
+                          echo "\$ZAP_PID";
+                          # While ZAP is still starting up, sleep one second
+                          until netstat -anp | grep 8080 | grep LISTEN
+                          do
+                              if [[ \$counter = 30 ]];
+                              then
+                                exit 1;
+                              fi;
+                              echo "sleeping \$counter";
+                              counter=\$((counter+1));
+                              sleep 1s;
+                          done
+                          echo "done sleeping";
+                      """
+                }
+            }
+        }
+
+        stage('Running Serenity/Selenium Tests') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                    // return env.BRANCH_NAME == 'feature-zap' //TODO: remove me
+                }
+            }
+            steps {
+                script {
+
+                    sh "mkdir acceptance-tests"
+
+                    // checkout acceptance tests repo to acceptance-tests dir in the current workspace
+                    checkout([$class                           : 'GitSCM',
+                              branches                         : [[name: '*/develop']],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions                       : [[
+                                                                    $class           : 'RelativeTargetDirectory',
+                                                                    relativeTargetDir: 'acceptance-tests'
+                                                                  ]],
+                              submoduleCfg                     : [],
+                              userRemoteConfigs                : [[
+                                                                    url          : 'https://github.com/REI-Systems/GSA-COMET-TEST',
+                                                                    credentialsId: 'gsa-comet-build-gsa-comet-rei-github-secret'
+                                                                  ]]
+                    ])
+
+                    // run acceptance tests
+                    sh "cd acceptance-tests && mvn clean verify serenity:aggregate -Dwebdriver.driver=remote -Dwebdriver.remote.driver=chrome -Dwebdriver.remote.url=https://selenium-hub-gsa-comet-build.apps.scomet.reidevops.net/wd/hub -Dwebdriver.base.url=https://gsa-comet-agency-ui-gsa-comet-dev.apps.scomet.reidevops.net/ -Dserenity.proxy.http=0.0.0.0 -Dserenity.proxy.http_port=8080"
+
+                    // public report
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'acceptance-tests/target/site/serenity/', reportFiles: 'index.html', reportName: 'Integration Test Report', reportTitles: 'COMET Tests'])
+
+                    //publish 508 compliance report files
+                    //zip zipFile: 'AccessibilityReport.zip', archive: true, dir: 'acceptance-tests/target/AccessibilityReport/'
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'acceptance-tests/target/AccessibilityReport/*.txt', onlyIfSuccessful: false, fingerprint: true
+                }
+            }
+        }
+
+        stage('ZAP: Generate & Report ZAP') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                    // return env.BRANCH_NAME == 'feature-zap' //TODO: remove me
+                }
+            }
+            steps {
+                script {
+                    sh "sleep 10"
+                    sh "curl -o reports/zap-report.html http://localhost:8080/OTHER/core/other/htmlreport/?"
+                    sh """
+                        echo "ZAP PID: \$ZAP_PID"
+                        # Finally, kill the ZAP process
+                        # kill \$ZAP_PID
+                      """
+                    sh "ls -lsa ."
+                    sh "ls -lsa /zap"
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: './reports', reportFiles: 'zap-report.html', reportName: 'Zap Test Report', reportTitles: 'ZAP Report for UI'])
+                }
+            }
+        }
+
+        stage('Netsparker Security Testing') {
+            when {
+                expression {
+                  return env.BRANCH_NAME == 'develop'
+                }
+            }
+            steps {
+                echo "Netsparker Security Scan"
+                NCScanBuilder(
+                    ncScanType: 'FullWithPrimaryProfile',
+                    ncWebsiteId: '811c5b99438245d83d94aa8f038105e0',
+                    ncApiToken: 'h9fUZzvgNjOUveD6YWsgkfcelUN0LfA7QoYki0IWN3I=',
+                    ncServerURL: 'https://www.netsparkercloud.com'
+                )
+            }
+        }
+
+        ////////////////////////////////////
+        //////// STAGE DEPLOYMENT //////////
+        ////////////////////////////////////
+        stage('Promote from Dev to Stage') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                }
+            }
+            steps {
+                tagImage(sourceImageName: "${APPLICATION_BUILD_NAME}", sourceImagePath: env.DEV, toImagePath: env.STAGE)
+            }
+        }
+
+        stage ('Verify Deployment to Stage') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'develop'
+                }
+            }
+            steps {
+                verifyDeployment(projectName: env.STAGE, targetApp: "${APPLICATION_BUILD_NAME}")
+            }
+        }
+
+        ////////////////////////////////////
+        /////// PRODUCTION DEPLOYMENT //////
+        ////////////////////////////////////
+        stage('Promotion gate') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                script {
+                    input message: 'Promote application to Production?'
+                }
+            }
+        }
+
+        stage('Promote from Stage to Prod') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                tagImage(sourceImageName: "${APPLICATION_BUILD_NAME}", sourceImagePath: env.STAGE, toImagePath: env.PROD)
+            }
+        }
+
+        stage ('Verify Deployment to Prod') {
+            when {
+                expression {
+                    return env.BRANCH_NAME == 'master'
+                }
+            }
+            steps {
+                verifyDeployment(projectName: env.PROD, targetApp: "${APPLICATION_BUILD_NAME}")
+            }
+        }
+    }
+    post {
+        always {
+            echo 'This will always run'
+        }
+        success {
+            echo 'This will run only if successful'
+            notifySlack('SUCCESS', 'Job successfully finished!')
+
+            // Report back to github: Status Check to enable the PR for merge
+            notifyGithubStatusCheck('SUCCESS', 'Continuous integration succeeded!')
+        }
+        failure {
+            echo 'This will run only if failed'
+            notifySlack('FAILED', 'Job failed!')
+
+            // Report back to github: Status Check to disable the PR for merge
+            notifyGithubStatusCheck('FAILURE', 'Continuous integration failed!')
+        }
+        unstable {
+            echo 'This will run only if the run was marked as unstable'
+            notifySlack('UNSTABLE', 'Job unstable!')
+        }
+        changed {
+            echo 'This will run only if the state of the Pipeline has changed'
+            echo 'For example, if the Pipeline was previously failing but is now successful'
+        }
+    }
+}
+
+// Report back to github: Status Check to enable or disable the PR for merge
+def notifyGithubStatusCheck(String status = 'SUCCESS', String description) {
+  if (env.BRANCH_NAME.startsWith('PR-') && env.CHANGE_BRANCH.startsWith('feature-') && env.CHANGE_TARGET.startsWith('develop')) {
+    // https://jenkins.io/doc/pipeline/steps/pipeline-githubnotify-step/
+    // https://developer.github.com/v3/repos/statuses/
+    // Report back to github: Status Check to enable the PR for merge
+    githubNotify description: description,  status: status, context: 'continuous-integration/jenkins/pr-head'
+  }
+}
+
+def notifySlack(String buildStatus = 'STARTED', additionalMessage = null) {
+    // Build status of null means success.
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    def color
+
+    if (buildStatus == 'STARTED') {
+        color = '#D4DADF'
+    } else if (buildStatus == 'SUCCESS') {
+        color = '#BDFFC3'
+    } else if (buildStatus == 'UNSTABLE') {
+        color = '#FFFE89'
+    } else {
+        color = '#FF9FA1'
+    }
+
+    def msg = "${buildStatus}: `${env.JOB_NAME}` #${env.BUILD_NUMBER}:\n${env.BUILD_URL}\n${additionalMessage}"
+
+    slackSend(color: color, message: msg)
+}
+
