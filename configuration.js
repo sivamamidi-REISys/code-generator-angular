@@ -2,7 +2,8 @@ exports.configuration = {
   "destinationPath": "y:\\sample",
   "pipeline":{
     name: '',
-    environmentName: 'jcomet'
+    environmentName: 'jcomet.reisystems.net',
+    appName: 'agency-ui'
   },
   "definitions": {
     "User": {

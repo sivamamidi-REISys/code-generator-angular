@@ -30,8 +30,8 @@ openshift.withCluster() {
 
     // Define environment variables for this job
     DOCKERFILE_PATH = "Dockerfile" // Path to dockerfile in this Repo
-    APPLICATION_BUILD_NAME = "gsa-comet-agency-ui" // Name of the OpenShift `BuildConfig` to build our ImageStream with the artifacts generated in this job
-    DOCKER_REGISTRY = "nexus-registry-gsa-comet-build.apps.scomet.reidevops.net/repository/docker" // Docker Registry where the built image will be pushed and scanned from
+    APPLICATION_BUILD_NAME = "gsa-comet-{{app-name}}" // Name of the OpenShift `BuildConfig` to build our ImageStream with the artifacts generated in this job
+    DOCKER_REGISTRY = "nexus-registry-gsa-comet-build.apps.{{environmentName}}/repository/docker" // Docker Registry where the built image will be pushed and scanned from
     SONARQUBE_URL = "http://sonarqube:9000"
     SONARQUBE_SECRET = "gsa-comet-sonarqube-secret"
     APP_VERSION = "latest" // Image tag to be pushed to private docker registry (Nexus)
@@ -374,7 +374,7 @@ pipeline {
                     ])
 
                     // run acceptance tests
-                    sh "cd acceptance-tests && mvn clean verify serenity:aggregate -Dwebdriver.driver=remote -Dwebdriver.remote.driver=chrome -Dwebdriver.remote.url=https://selenium-hub-gsa-comet-build.apps.scomet.reidevops.net/wd/hub -Dwebdriver.base.url=https://gsa-comet-agency-ui-gsa-comet-dev.apps.scomet.reidevops.net/ -Dserenity.proxy.http=0.0.0.0 -Dserenity.proxy.http_port=8080"
+                    sh "cd acceptance-tests && mvn clean verify serenity:aggregate -Dwebdriver.driver=remote -Dwebdriver.remote.driver=chrome -Dwebdriver.remote.url=https://selenium-hub-gsa-comet-build.apps.scomet.reidevops.net/wd/hub -Dwebdriver.base.url=https://gsa-comet-{{appName}}-gsa-comet-dev.apps.scomet.reidevops.net/ -Dserenity.proxy.http=0.0.0.0 -Dserenity.proxy.http_port=8080"
 
                     // public report
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'acceptance-tests/target/site/serenity/', reportFiles: 'index.html', reportName: 'Integration Test Report', reportTitles: 'COMET Tests'])

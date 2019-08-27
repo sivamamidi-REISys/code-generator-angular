@@ -1,0 +1,12 @@
+APPLICATION_NAME=gsa-comet-agency-ui-__APPLICATION_VERSION__
+APPLICATION_VERSION=__APPLICATION_VERSION__
+NAMESPACE=gsa-comet-feature
+API_KEY=ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe
+API_URL=https://gsa-comet-agency-api-gsa-comet-dev.apps.{{environmentName}}
+ENVIRONMENT=dev
+DOCKER_REGISTRY=nexus-registry-gsa-comet-build.apps.{{environmentName}}/repository/docker
+OKTA_ISSUER=https://dev-688510.okta.com/oauth2/default
+OKTA_CLIENT_ID=0oanj4pr6rMROW81W356
+OKTA_REDIRECT=https://gsa-comet-agency-ui-gsa-comet-dev.apps.{{environmentName}}/implicit/callback
+OKTA_BASE=https://dev-688510.okta.com/
+USER_API=https://gsa-comet-user-api-gsa-comet-dev.apps.{{environmentName}}
