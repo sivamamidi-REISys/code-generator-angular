@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: gsa-comet-agency-ui-jenkins-pipeline
+metadata:
+  annotations:
+    description: Comet Front End App template for JWS applications built using a Jenkins Pipeline
+    iconClass: icon-tomcat
+    tags: nodejs,jenkins-ci
+    version: 1.2.0
+  name: gsa-comet-agency-ui-jenkins-pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+    namespace: "${NAMESPACE}"
+  spec:
+    output:
+      to:
+        kind: DockerImage
+        name: ${DOCKER_REGISTRY}/${APPLICATION_NAME}:${APPLICATION_VERSION}
+      pushSecret:
+        name: ${DOCKER_REGISTRY_PUSH_SECRET}
+    source:
+      binary: {}
+      type: Binary
+    strategy:
+      dockerStrategy:
+        noCache: true # remove this for faster docker image builds
+        dockerfilePath: Dockerfile
+      type: Docker
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/image.insecureRepository: "true" # Allow to pull image from unsecured registry
+    labels:
+      application: ${APPLICATION_NAME}
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+    namespace: ${NAMESPACE}
+  spec:
+    lookupPolicy:
+      local: false
+    dockerImageRepository: ${DOCKER_REGISTRY}/${APPLICATION_NAME}
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${DOCKER_REGISTRY}/${APPLICATION_NAME}:${APPLICATION_VERSION}
+      importPolicy:
+        insecure: true
+      name: ${APPLICATION_VERSION}
+      referencePolicy:
+        type: Source
+parameters:
+- description: The name for the application.
+  name: APPLICATION_NAME
+  required: true
+  value: basic-nodejs
+- description: The version of the application.
+  name: APPLICATION_VERSION
+  value: "latest"
+- description: The namespace to deploy into
+  name: NAMESPACE
+  required: true
+- description: Docker registry to push the image
+  name: DOCKER_REGISTRY
+  value: "nexus-registry-comet.reisystems.io/repository/docker"
+- description: Docker registry's secret to push the image
+  name: DOCKER_REGISTRY_PUSH_SECRET
+  value: "docker-nexus"
