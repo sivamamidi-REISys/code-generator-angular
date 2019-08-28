@@ -1,57 +1,53 @@
 exports.configuration = {
-  "destinationPath": "y:\\sample",
+  "destinationPath": "C:\\COMET\\COMET-CHALLENGE-UI_08262019\\src\\app",
   "pipeline":{
     name: '',
     environmentName: 'jcomet.reisystems.net',
     appName: 'agency-ui'
   },
   "definitions": {
-    "User": {
+    "Opportunity": {
       "actionType": "crud",
-      "pluralWord": "Users",
-      "uniqueId": "userId",
+      "pluralWord": "Opportunities",
+      "uniqueId": "opportunityId",
       "properties": [
         {
-          "name": "firstName",
-          "display": "First Name",
+          "name": "opportunityName",
+          "display": "Opportunity Name",
           "type": "string",
           "required": true
         },
         {
-          "name": "lastName",
-          "display": "Last Name",
+          "name": "publishedDate",
+          "display": "Published Date",
           "type": "string",
           "required": true
         },
         {
-          "name": "email",
-          "display": "Email",
+          "name": "responseDate",
+          "display": "Response Date",
           "type": "string",
           "required": true
         },
         {
-          "name": "roles",
-          "display": "Roles",
+          "name": "agencyName",
+          "display": "Agency Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "office",
+          "display": "Office",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "status",
+          "display": "Status",
           "type": "string",
           "required": true
         }
       ]
-
-    },
-   
-    "Team": {
-      "actionType": "crud",
-      "pluralWord": "Teams",
-      "uniqueId": "teamId",
-      "properties": [
-        {
-          "name": "name",
-          "display": "Team Name",
-          "type": "string",
-          "required": true
-        }
-      ]
-
     }
   }
 }
