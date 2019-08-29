@@ -39,13 +39,19 @@ exports.configuration = {
 
     },
    
-    "Team": {
+    "Retro": {
       "actionType": "crud",
-      "pluralWord": "Teams",
-      "uniqueId": "teamId",
+      "pluralWord": "Retros",
+      "uniqueId": "retrospectiveId",
       "properties": [
         {
           "name": "name",
+          "display": "Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "teamId",
           "display": "Team Name",
           "type": "string",
           "required": true

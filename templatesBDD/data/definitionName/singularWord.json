@@ -3,9 +3,12 @@
 
 {
  {{#each properties}}
-    "{{name}}" : "Test {{name}}",
+    "{{name}}" : "Test {{display}}",
 {{/each}}
-
+{{#each properties}}
+"{{name}}Header" : "{{display}}",
+{{/each}}
+"pageTitle" : ""
 }
 
 }
