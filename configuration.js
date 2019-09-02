@@ -1,54 +1,53 @@
 exports.configuration = {
-  "destinationPath": "y:\\sample",
+  "destinationPath": "C:\\COMET\\COMET-CHALLENGE-UI_08262019\\src\\app",
   "pipeline":{
     name: '',
     environmentName: 'jcomet.reisystems.net',
     appName: 'agency-ui'
   },
   "definitions": {
-    "Entity": {
+    "Opportunity": {
       "actionType": "crud",
-      "pluralWord": "entities",
-      "uniqueId": "entityId",
+      "pluralWord": "Opportunities",
+      "uniqueId": "opportunityId",
       "properties": [
         {
-          "name": "name",
-          "display": "Name",
+          "name": "opportunityName",
+          "display": "Opportunity Name",
           "type": "string",
           "required": true
         },
         {
-          "name": "excludedinSamGov",
-          "display": "Excluded in Sam Gov",
+          "name": "publishedDate",
+          "display": "Published Date",
           "type": "string",
           "required": true
         },
         {
-          "name": "recommended",
-          "display": "Recommended",
+          "name": "responseDate",
+          "display": "Response Date",
           "type": "string",
           "required": true
         },
         {
-          "name": "flagged",
-          "display": "Flagged",
+          "name": "agencyName",
+          "display": "Agency Name",
           "type": "string",
           "required": true
         },
         {
-          "name": "keyFindings",
-          "display": "key Findings",
+          "name": "office",
+          "display": "Office",
           "type": "string",
           "required": true
         },
         {
-          "name": "reviewJustification",
-          "display": "Review Justification",
+          "name": "status",
+          "display": "Status",
           "type": "string",
           "required": true
         }
       ]
-
     }
   }
 }
