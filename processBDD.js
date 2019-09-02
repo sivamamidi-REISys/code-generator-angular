@@ -142,7 +142,12 @@ function registerHelpers() {
     });
 
 
-
+    Handlebars.registerHelper('upperCase', function (str) {
+        if(str && typeof str === "string") {
+          return str.toUpperCase();
+        }
+        return '';
+      });
 
 
 
