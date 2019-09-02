@@ -71,11 +71,11 @@ public class {{singularWord}}Page extends PageObject {
 
 
     public String edit{{singularWord}}Details(String {{singular}}) throws InterruptedException {
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), {{singular}});
         checkForPresenceOfElement(TABLE);
         clickElement(TABLEEDITACTION);
         checkForPresenceOfElement(CANCELBUTTON);
         waitFor(ExpectedConditions.attributeContains({{upperCase properties.1.name}},"value", Utilities.getStringValueFromJsonObject(dataObj, "{{properties.1.name}}")));
-        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), {{singular}});
         long time = new Date().getTime();
         String updatedText = time + Utilities.getStringValueFromJsonObject(dataObj,  "{{properties.1.name}}");
         enterValue({{upperCase properties.1.name}}, updatedText);

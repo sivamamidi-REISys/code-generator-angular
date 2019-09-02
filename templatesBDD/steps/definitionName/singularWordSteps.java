@@ -20,7 +20,8 @@ public class {{singularWord}}Steps extends ScenarioSteps {
 
 
     @Then("^I should be able to verify {{pluralWord}} List$")
-    public void  iShouldBeAbleToVerify{{singularWord}}sList() {
+    public void  verify{{singularWord}}sList() {
+        
         JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(ExecutionContext.getJsonData(), "{{singular}}");
         String title = Utilities.getStringValueFromJsonObject(dataObj, "pageTitle");
         
@@ -28,20 +29,21 @@ public class {{singularWord}}Steps extends ScenarioSteps {
         {{#each properties}}
             String {{name}}Header = Utilities.getStringValueFromJsonObject(dataObj, "{{name}}Header");
         {{/each}}
-        Assert.assertTrue(dataObj.verify{{singularWord}}PageTitle().equalsIgnoreCase(title));
-        String tableHeaders = dataObj.verify{{singularWord}}PageTableHeaders();
+        Assert.assertTrue({{singular}}Page.verify{{singularWord}}PageTitle().equalsIgnoreCase(title));
+        String tableHeaders = {{singular}}Page.verify{{singularWord}}PageTableHeaders();
           {{#each properties}}
              Assert.assertTrue(tableHeaders.contains({{name}}Header));
         {{/each}}
     }
 
     @Then("^I should be able to create a new {{singularWord}} \"([^\"]*)\"$")
-    public void iShouldBeAbleToCreateANew{{singularWord}}(String {{singular}}) throws Throwable {
+    public void createANew{{singularWord}}(String {{singular}}) throws Throwable {
         {{singular}}Page.createNew{{singularWord}}({{singular}});
     }
 
     @Then("^I should be able to edit the {{singular}} \"([^\"]*)\"$")
-    public void iShouldBeAbleToEditThe{{singularWord}}(String {{singular}}) throws Throwable {
+    public void editThe{{singularWord}}(String {{singular}}) throws Throwable {
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(ExecutionContext.getJsonData(), "{{singular}}");
         Assert.assertTrue({{singular}}Page.edit{{singularWord}}Details({{singular}}).contains(Utilities.getStringValueFromJsonObject(dataObj, "{{properties.1.name}}")));
     }
 }
