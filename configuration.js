@@ -6,43 +6,10 @@ exports.configuration = {
     appName: 'agency-ui'
   },
   "definitions": {
-    "User": {
+    "Entity": {
       "actionType": "crud",
-      "pluralWord": "Users",
-      "uniqueId": "userId",
-      "properties": [
-        {
-          "name": "firstName",
-          "display": "First Name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "lastName",
-          "display": "Last Name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "email",
-          "display": "Email",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "roles",
-          "display": "Roles",
-          "type": "string",
-          "required": true
-        }
-      ]
-
-    },
-   
-    "Retro": {
-      "actionType": "crud",
-      "pluralWord": "Retros",
-      "uniqueId": "retrospectiveId",
+      "pluralWord": "entities",
+      "uniqueId": "entityId",
       "properties": [
         {
           "name": "name",
@@ -51,8 +18,32 @@ exports.configuration = {
           "required": true
         },
         {
-          "name": "teamId",
-          "display": "Team Name",
+          "name": "excludedinSamGov",
+          "display": "Excluded in Sam Gov",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "recommended",
+          "display": "Recommended",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "flagged",
+          "display": "Flagged",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "keyFindings",
+          "display": "key Findings",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reviewJustification",
+          "display": "Review Justification",
           "type": "string",
           "required": true
         }

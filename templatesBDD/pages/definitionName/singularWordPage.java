@@ -1,4 +1,4 @@
-package gov.gsa.comet.pages.user;
+package gov.gsa.comet.pages.{{singular}};
 
 import com.google.gson.JsonObject;
 import cucumber.api.java.es.E;
@@ -12,29 +12,31 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.Date;
 
-public class UserPage extends PageObject {
+public class {{singularWord}}Page extends PageObject {
     private static final By TABLE = By.id("{{singular}}-table");
     private static final By TABLE_HEAD = By.cssSelector("#{{singular}}-table > thead");
 
-    private static final By USERSLINK = By.id("{{singular}}");
-    private static final By PAGEHEADER = By.cssSelector("h2");
+    private static final By HEADERLINK = By.id("{{singular}}");
+    private static final By PAGEHEADER = By.id("headerText");
     private static final int FIRSTROWNUM = 1;
-    private static final By FIRSTNAME = By.id("firstName");
-    private static final By LASTNAME = By.id("lastName");
-    private static final By EMAIL = By.id("email");
-    private static final By CANCEL_BUTTON = By.id("cancelButton");
-    private static final By ROLES = By.cssSelector("fieldset > ul > li:nth-child(1)");
-    private static final By CREATEBUTTON = By.id("cancel");
-    private static final By ADDBUTTON = By.id("add_user");
+    private static final By CANCELBUTTON = By.id("cancelButton");
+    private static final By CREATEBUTTON = By.id("createButton");
+    private static final By ADDBUTTON = By.id("addButton");
+    private static final By SUBMITBUTTON = By.id("submittButton");
     private static final By SEARCHFIELD = By.id("search-field-small");
     private static final By SEARCHBUTTON = By.id("search");
-    private static final By TABLEFIRSTROW = By.cssSelector("table > tbody > tr > td:nth-child(1)");
-    private static final By TABLEEDITACTION = By.cssSelector("table > tbody > tr > td:nth-child(5) > button:nth-child(2)");
+    private static final By TABLEFIRSTROW = By.cssSelector("#{{singular}}-table > tbody > tr > td:nth-child(1)");
+    private static final By TABLEEDITACTION = By.cssSelector("#{{singular}}-table > tbody > tr > td:nth-child(5) > button:nth-child(2)");
+
+
+    {{#each properties}}
+        private static final By {{upperCase name}} = By.id("{{name}}");
+    {{/each}}
 
 
     @Override
     public String getPageName() {
-        return "User Management Page";
+        return "{{singularWord}} Page";
     }
 
     @Override
@@ -42,54 +44,43 @@ public class UserPage extends PageObject {
         testPageFor508();
     }
 
-    public void navigateToUserPage() {
-        clickElement(USERSLINK);
+    public void navigateTo{{singularWord}}Page() {
+        clickElement(HEADERLINK);
     }
 
-    public String verifyUserPageTitle() {
+    public String verify{{singularWord}}PageTitle() {
         checkForPresenceOfElement(TABLE);
         return getValueOfElement(PAGEHEADER);
     }
 
-    public String verifyUserPageTableHeaders() {
+    public String verify{{singularWord}}PageTableHeaders() {
         checkForPresenceOfElement(TABLE);
         return getValueOfElement(TABLE_HEAD);
     }
 
-    public void createNewUser(String user) {
+    public void createNew{{singularWord}}(String {{singular}}) {
         clickElement(ADDBUTTON);
-        checkForPresenceOfElement(FIRSTNAME);
-        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), user);
-        long currentTime = new Date().getTime();
-        ExecutionContext.firstNameProvided = Utilities.getStringValueFromJsonObject(dataObj, "firstName") + currentTime;
-        ExecutionContext.email = currentTime+Utilities.getStringValueFromJsonObject(dataObj, "email");
-        enterValue(FIRSTNAME, ExecutionContext.firstNameProvided);
-        enterValue(LASTNAME, Utilities.getStringValueFromJsonObject(dataObj, "lastName"));
-        enterValue(EMAIL, ExecutionContext.email);
-        clickElement(ROLES);
+        checkForPresenceOfElement(CANCELBUTTON);
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), {{singular}});
+       {{#each properties}}
+            enterValue({{upperCase name}}, Utilities.getStringValueFromJsonObject(dataObj, "{{name}}"));
+      {{/each}}
         clickElement(CREATEBUTTON);
         checkForPresenceOfElement(TABLE);
     }
 
 
-    public String editUserDetails(String user) throws InterruptedException {
+    public String edit{{singularWord}}Details(String {{singular}}) throws InterruptedException {
         checkForPresenceOfElement(TABLE);
-        enterValue(SEARCHFIELD, ExecutionContext.firstNameProvided);
-        clickElement(SEARCHBUTTON);
-        waitForTextToAppear(findElement(TABLEFIRSTROW), ExecutionContext.firstNameProvided);
         clickElement(TABLEEDITACTION);
-        checkForPresenceOfElement(FIRSTNAME);
-        String text = findElement(EMAIL).getAttribute("value");
-        System.out.println("Text is: "+ text);
-        waitFor(ExpectedConditions.attributeContains(EMAIL,"value", ExecutionContext.email));
-        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), user);
+        checkForPresenceOfElement(CANCELBUTTON);
+        waitFor(ExpectedConditions.attributeContains({{upperCase properties.1.name}},"value", Utilities.getStringValueFromJsonObject(dataObj, "{{properties.1.name}}")));
+        JsonObject dataObj = Utilities.getJsonObjectFromJsonObject(getJsonData(), {{singular}});
         long time = new Date().getTime();
-        ExecutionContext.updatedEmail = time + Utilities.getStringValueFromJsonObject(dataObj, "editEmail");
-        enterValue(EMAIL, ExecutionContext.updatedEmail);
+        String updatedText = time + Utilities.getStringValueFromJsonObject(dataObj,  "{{properties.1.name}}");
+        enterValue({{upperCase properties.1.name}}, updatedText);
         clickElement(CREATEBUTTON);
         checkForPresenceOfElement(TABLE);
-        enterValue(SEARCHFIELD, ExecutionContext.updatedEmail);
-        clickElement(SEARCHBUTTON);
         return getValueOfElement(TABLE);
     }
 }

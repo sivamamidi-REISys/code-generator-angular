@@ -42,6 +42,6 @@ public class {{singularWord}}Steps extends ScenarioSteps {
 
     @Then("^I should be able to edit the {{singular}} \"([^\"]*)\"$")
     public void iShouldBeAbleToEditThe{{singularWord}}(String {{singular}}) throws Throwable {
-        Assert.assertTrue({{singular}}Page.edit{{singularWord}}Details({{singular}}).contains(ExecutionContext.updatedEmail));
+        Assert.assertTrue({{singular}}Page.edit{{singularWord}}Details({{singular}}).contains(Utilities.getStringValueFromJsonObject(dataObj, "{{properties.1.name}}")));
     }
 }
