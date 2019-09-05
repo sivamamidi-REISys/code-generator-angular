@@ -6,13 +6,9 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {SessionService} from '../../login/services/session.service';
 import { {{singularWord}}Create} from '../models/{{plural}}.model';
 import {environment} from '../../../environments/environment';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
-
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
 
 describe('{{pluralWord}}Service', () => {
   const testPath = 'http://localhost:1234';
@@ -22,13 +18,19 @@ describe('{{pluralWord}}Service', () => {
     imports: [
       HttpClientModule,
       HttpClientTestingModule,
-      RouterTestingModule,
-      OktaAuthModule.initAuth(config),
+      {{#if isAuthenticated}}
+      OAuthModule.forRoot(),
+  {{/if}}
+      RouterTestingModule
+      
     ],
     providers: [
       {{pluralWord}}Service,
-      SessionService,
-      OktaAuthService
+      {{#if isAuthenticated}}
+      OAuthService,
+  {{/if}}
+      SessionService
+      
     ]
   }));
 

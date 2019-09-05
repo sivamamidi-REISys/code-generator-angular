@@ -34,9 +34,7 @@ class DlgTestViewContainerDirective {
 
 @Component({
   selector: 'app-arbitrary-component',
-  template: `
-    <dir-with-view-container></dir-with-view-container>
-  `
+  template: `<dir-with-view-container></dir-with-view-container>`
 })
 class DlgTestChildViewContainerComponent {
   @ViewChild(DlgTestViewContainerDirective, { static: false })

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { CancelDialogComponent } from '../cancel-dialog/cancel-dialog.component';
 import {MatDialog} from "@angular/material"; 
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-edit-{{singular}}',
@@ -33,13 +34,15 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       const element = document.getElementById('{{singular}}EditForm');
-      element.scrollIntoView(
-        {
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        }
-      );
+      if(element){
+        element.scrollIntoView(
+          {
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+          }
+        );
+      }
     }, 1000);
   }
 
@@ -50,7 +53,7 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
         this.{{singular}} = result;
         this.createForms();
         const formData = {
-          {{#each properties}}
+          {{#each propertiesEditable}}
           {{name}}: this.{{../singular}}.{{name}},
           {{/each}}
         };
@@ -61,14 +64,14 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
 
   createForms() {
     this.{{singular}}DetailsForm = this.fb.group({
-      {{#each properties}}
+      {{#each propertiesEditable}}
        {{name}}: new FormControl({ value: '', disabled: this.disableControls() }, [Validators.required]),
       {{/each}}
     });
   }
 
   update{{singularWord}}() {
-    {{#each properties}}
+    {{#each propertiesEditable}}
         this.{{../singular}}.{{name}} = this.{{name}}Control.value;
     {{/each}}
 
@@ -107,7 +110,7 @@ export class Edit{{singularWord}}Component implements OnInit, AfterViewInit {
     return !this.isEdit && !!this.userId;
   }
 
-  {{#each properties}}
+  {{#each propertiesEditable}}
     get {{name}}Control(): FormControl {
       return this.{{../singular}}DetailsForm.get('{{name}}') as FormControl;
     }

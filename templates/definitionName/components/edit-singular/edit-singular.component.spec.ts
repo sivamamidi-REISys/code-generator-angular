@@ -8,17 +8,13 @@ import {CancelDialogComponent} from '../cancel-dialog/cancel-dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {MatDialog, MatDialogModule, MatPaginatorModule, MatSortModule, MatTableModule} from '@angular/material';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SessionService} from '../../../login/services/session.service';
-
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
 
 describe('Edit{{singularWord}}Component', () => {
   let component: Edit{{singularWord}}Component;
@@ -34,8 +30,8 @@ describe('Edit{{singularWord}}Component', () => {
   const testUrl = 'http://localhost:1234/{{plural}}-list';
 
   const test{{singularWord}} = {
-    {{#each properties}}
-        {{name}} : "Test Property",
+    {{#each propertiesEditable}}
+        {{name}} : "Test {{name}}",
       {{/each}}
   };
 
@@ -55,14 +51,18 @@ describe('Edit{{singularWord}}Component', () => {
         MatPaginatorModule,
         MatSortModule,
         MatTableModule,
-        OktaAuthModule.initAuth(config),
+        {{#if isAuthenticated}}
+            OAuthModule.forRoot(),
+        {{/if}}
         BrowserAnimationsModule,
         BrowserModule,
         ReactiveFormsModule
       ],
       providers: [
         {{pluralWord}}Service,
-        OktaAuthService,
+        {{#if isAuthenticated}}
+            OAuthService,
+        {{/if}}
         SessionService,
         { provide: FormBuilder, useValue: formBuilder }
       ]
@@ -76,13 +76,13 @@ describe('Edit{{singularWord}}Component', () => {
     component = fixture.componentInstance;
     dialogSpy = spyOn(TestBed.get(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
     component.{{singular}}DetailsForm = formBuilder.group({
-      {{#each properties}}
+      {{#each propertiesEditable}}
         {{name}} : new FormControl(),
       {{/each}}
     });
     
-    {{#each properties}}
-        {{../singular}}.{{name}} = "Test Property" ;
+    {{#each propertiesEditable}}
+        {{../singular}}.{{name}} = "Test {{name}}" ;
     {{/each}}
 
     fixture.detectChanges();
@@ -109,8 +109,10 @@ describe('Edit{{singularWord}}Component', () => {
       spyOn(localStorage, 'setItem').and.stub();
       spyOn(component.router, 'navigateByUrl').and.stub();
 
-      component.{{singular}}DetailsForm.get('{{singular}}Name').setValue('NorthBay Tech');
-      
+
+      {{#each propertiesEditable}}
+          component.{{../singular}}DetailsForm.get('{{../singular}}Name').setValue("Test {{name}}");
+      {{/each}}
 
       component.{{singular}} = test{{singularWord}};
       component.update{{singularWord}}();
@@ -125,7 +127,6 @@ describe('Edit{{singularWord}}Component', () => {
 
   it('should get an {{singular}} by Id',
     fakeAsync(() => {
-      // const mockedObservable = Observable.of( new {{singularWord}}Create());
       spyOn({{plural}}Service, 'get{{singularWord}}ById').and.returnValue(Observable.of(test{{singularWord}}));
 
       component.{{singular}} = test{{singularWord}};
@@ -142,6 +143,28 @@ describe('Edit{{singularWord}}Component', () => {
 
     expect(dialogSpy).toHaveBeenCalled();
   });
+
+  it('should set error messages on update',
+    fakeAsync(() => {
+      const mockedObservable = Observable.create(observer => {
+        observer.error({
+          error: {
+            errorMessages: ['Test Error Message']
+          }
+        });
+        observer.complete();
+      });
+      spyOn({{plural}}Service, 'update{{singularWord}}').and.returnValue(mockedObservable);
+      component.{{singular}} = test{{singularWord}};
+      component.update{{singularWord}}();
+      fixture.detectChanges();
+
+      tick();
+      expect({{plural}}Service.update{{singularWord}}).toHaveBeenCalled();
+      expect(component.errorMessages).not.toBeNull();
+      expect(component.errorMessages.length).toBe(1);
+    })
+  );
 
   
 

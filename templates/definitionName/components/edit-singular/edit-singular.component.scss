@@ -1,38 +1,46 @@
-.grid-container {
-  float: initial;
+.formBody {
+  overflow: hidden;
+  width: 100%;
+
 }
 
-h2 {
-  padding-right: 15px;
-  margin-left: 12px;
-  font-family: sans-serif;
-  color: #003470;
+.grid-row {
+  padding: 5px;
 }
 
-.create{{singularWord}}Wrapper {
+
+
+.formWrapper {
   margin-top: 1px;
   padding: 2em;
-  padding-right: 5rem;
+  padding-right: 2rem;
   background-color: white;
   border-style: none;
   width: 30rem;
   margin-bottom: 30px;
-  box-shadow: 7px 7px 5px #f1f3f6;
+  margin-top: 35px;
+  border-radius: 5px;
+  box-shadow: 3px 5px 6px #989898;
 
 }
 
 .usa-form {
-  margin: inherit;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
   font-family: sans-serif;
+}
+
+.actionButton {
+  margin: auto;
+  width: 50%;
 }
 
 .usa-legend {
   color: #003470;
 }
 
-#{{singular}}TypeWrapper {
-  width: inherit;
-}
+
 
 p {
   text-align: center;
@@ -41,83 +49,165 @@ p {
 
 
 
-// Form fill sheet
-.usa-input {
-  display: block;
-  width: 100%;
 
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #757575;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #c9c9c9;
-  border-radius: 0.25rem;
-  -webkit-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
+// LIST //@at-root
+.list {
+  max-width: 1200px;
+  background-color: white;
+  padding: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 35px;
+  border-radius: 5px;
+  box-shadow: 3px 5px 6px #989898;
 }
 
-.usa-error-message {
-
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: 80%;
-  color: #d83933;
-}
-
-.usa-input--error {
-
-  border: 1px solid #d83933;
-
-
-
-}
-
-.usa-select {
-  display: block;
-  width: 100%;
-  height: calc(1.5em + .75rem + 2px);
-
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #757575;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #c9c9c9;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-}
-
-.usa-button--outline {
-  -moz-osx-font-smoothing: auto;
-  -webkit-font-smoothing: subpixel-antialiased;
+.mat-paginator {
   background-color: transparent;
-  -webkit-box-shadow: inset 0 0 0 2px #005ea2;
-  box-shadow: inset 0 0 0 2px #005ea2;
-  color: #005ea2;
 }
 
-.usa-button--outline:visited {
-  color: #005ea2;
+
+
+.screen-header {
+  width: 100%;
+  height: 85px;
+  padding: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+
 }
 
-.usa-button--outline:hover,
-.usa-button--outline.usa-button--hover {
-  background-color: #1a4480;
-  -webkit-box-shadow: inset 0 0 0 2px #1a4480;
-  box-shadow: inset 0 0 0 2px #1a4480;
-  color: #ffffff;
+
+.headerText {
+  float: left;
+  margin: 11px;
+  font-family: sans-serif;
+  color: #003470;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.search {
+  padding-left: 300px;
+}
+
+#search-field-small {
+  width: 194px;
+}
+
+.usa-search {
+
+  border-radius: 5px 0px 0px 5px;
+}
+
+
+
+th {
+  background-color: grey;
+  color: black;
+  font-size: 14px;
+  text-align: center;
+
+}
+
+td.mat-cell {
+  padding: 12px;
+
+}
+
+tr {
+  background: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+  background: white;
+}
+
+th.mat-header-cell {
+  padding-left: 12px;
+}
+
+/*# ICONS  */
+
+.fas {
+  float: left;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.far {
+  float: left;
+  padding: 10px;
+  font-size: 18px;
 }
 
 .fa-plus-circle {
-  color: #005ea2;
+  color: #2c608a;
+  font-size: 24px;
+  padding-top: 19px;
 
-  padding-top: 12px;
 }
 
 .fa-plus-circle:hover {
-  color: #1f303e
+  color: #1f303e;
+}
+
+.fa-edit {
+  color: #28a0cb;
+}
+
+.fa-edit:hover {
+  color: #074b69;
+}
+
+.fa-trash-alt {
+  color: #d83933;
+}
+
+.fa-trash-alt:hover {
+  color: #6f3331;
+}
+
+.fa-eye {
+  color: #5c5c5c;
+}
+
+.fa-eye:hover {
+  color: #1b1b1b;
+}
+
+@media screen and (max-width: 1200px) {
+  .search {
+    padding-left: 230px;
+  }
+
+}
+
+@media screen and (max-width: 950px) {
+  .search {
+    padding-left: 100px;
+  }
+
+
+}
+
+@media screen and (max-width: 700px) {
+  .search {
+    padding-left: 64px;
+  }
+
+  .headerText {
+    font-size: 28px;
+  }
+
+  .fa-plus-circle {
+    font-size: 22px;
+  }
+
+  #search-field-small {
+    width: 132px;
+  }
+
 }

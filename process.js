@@ -40,15 +40,23 @@ function processDefinition() {
         const singularWord = definitionName, pluralWord = `${rawDefinitions[definitionName]["pluralWord"]}`,
             plural = pluralWord.toLowerCase(), singular = singularWord.toLowerCase();
         const properties = rawDefinitions[definitionName]["properties"];
+        const propertiesList = properties.filter(item => item.isInList);
+        const propertiesEditable = properties.filter(item => item.isEdit);
+        const propertiesReadOnly = properties.filter(item => !item.isEdit);
+        const isAuthenticated = rawDefinitions[definitionName]["isAuthenticated"];
         const actionType = rawDefinitions[definitionName]["actionType"];
         const uniqueId = rawDefinitions[definitionName]["uniqueId"];
 
         return {
+            isAuthenticated: isAuthenticated,
             singularWord: singularWord,
             pluralWord: pluralWord,
             plural: plural,
             singular: singular,
             properties: properties,
+            propertiesList: propertiesList,
+            propertiesEditable: propertiesEditable,
+            propertiesReadOnly: propertiesReadOnly,
             actionType: actionType,
             uniqueId: uniqueId
         }
@@ -81,7 +89,7 @@ function registerHelpers() {
 
     Handlebars.registerHelper('list-row', function () {
         const result = `<ng-container matColumnDef="${this.name}" id="${this.name}">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>${this.display}</th>
+        <th id="${this.name}" mat-header-cell *matHeaderCellDef mat-sort-header>${this.display}</th>
         <td mat-cell *matCellDef="let element"> {{element.${this.name}}} </td>
       </ng-container>`;
         return new Handlebars.SafeString(result);
@@ -94,11 +102,6 @@ function registerHelpers() {
                 </li>
                 <hr>`;
 
-
-        //     const result = ` <div>
-
-        //     <input id="${this.name}" name="${this.name}" type="text" formControlName="${this.name}" disabled>
-        //   </div>`;
         return new Handlebars.SafeString(result);
     });
 
@@ -117,6 +120,7 @@ function registerHelpers() {
         return new Handlebars.SafeString(result);
     });
 
+
     Handlebars.registerHelper('edit-row', function () {
         const result = `  <div>
         <label class="usa-label" for="${this.name}">${this.display}</label>
@@ -132,6 +136,24 @@ function registerHelpers() {
       </div>`;
         return new Handlebars.SafeString(result);
     });
+
+    Handlebars.registerHelper('edit-row-readonly', function (singular) {
+        const result = `  <div class="section">
+        <div class="grid-row">
+          <div class="grid-col-4">
+            <div class="field"> ${this.name}</div>
+          </div>
+          <div class="grid-col-4">
+            <div class="content"> {{  ${singular}.${this.name} }}</div>
+          </div>
+        </div>
+      </div>`;
+        return new Handlebars.SafeString(result);
+    });
+
+
+
+
 
 
 

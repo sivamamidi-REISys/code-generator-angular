@@ -7,16 +7,13 @@ import { MatTableModule } from '@angular/material/table';
 import {SessionService} from '../../../login/services/session.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
 import {environment} from '../../../../environments/environment';
 import { {{singularWord}}Create} from "../../models/{{plural}}.model";
 import {Observable, of} from "rxjs";
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
 
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
 
 describe('View{{singularWord}}DialogComponent', () => {
   let component: View{{singularWord}}DialogComponent;
@@ -49,14 +46,20 @@ describe('View{{singularWord}}DialogComponent', () => {
         HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
+        {{#if isAuthenticated}}
+            OAuthModule.forRoot(),
+        {{/if}}
         MatDialogModule,
         MatTableModule,
-        OktaAuthModule.initAuth(config)
+        MatTableModule
+    
       ],
       providers: [
         SessionService,
         {{pluralWord}}Service,
-        OktaAuthService,
+        {{#if isAuthenticated}}
+            OAuthService,
+        {{/if}}
         { provide: MatDialogRef, useValue: dialogMock },
         { provide: FormBuilder, useValue: formBuilder }
       ]

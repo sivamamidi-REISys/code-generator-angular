@@ -12,16 +12,13 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {CancelDialogComponent} from '../cancel-dialog/cancel-dialog.component';
 import {BrowserModule} from '@angular/platform-browser';
 import { {{pluralWord}}Service} from '../../services/{{plural}}.service';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
 import {SessionService} from '../../../login/services/session.service';
 import {environment} from '../../../../environments/environment';
 import { {{singularWord}}Create} from '../../models/{{plural}}.model';
 
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
 
 describe('Create{{singularWord}}Component', () => {
   let component: Create{{singularWord}}Component;
@@ -47,14 +44,18 @@ describe('Create{{singularWord}}Component', () => {
         MatPaginatorModule,
         MatSortModule,
         MatTableModule,
-        OktaAuthModule.initAuth(config),
+        {{#if isAuthenticated}}
+            OAuthModule.forRoot(),
+        {{/if}}
         BrowserAnimationsModule,
         BrowserModule,
         ReactiveFormsModule
       ],
       providers: [
         {{pluralWord}}Service,
-        OktaAuthService,
+        {{#if isAuthenticated}}
+            OAuthService,
+        {{/if}}
         SessionService
       ]
     })
@@ -66,9 +67,9 @@ describe('Create{{singularWord}}Component', () => {
     fixture = TestBed.createComponent(Create{{singularWord}}Component);
     component = fixture.componentInstance;
     dialogSpy = spyOn(TestBed.get(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
-    {{#each properties}}
-        {{../singular}}.{{name}} = "Test Property" ;
-      {{/each}}
+    {{#each propertiesEditable}}
+        {{../singular}}.{{name}} = "Test {{name}}" ;
+    {{/each}}
      
     
     spyOn(component.router, 'navigate');

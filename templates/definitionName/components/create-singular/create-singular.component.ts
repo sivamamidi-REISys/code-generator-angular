@@ -33,14 +33,14 @@ export class Create{{singularWord}}Component implements OnInit {
 
   createForms() {
     this.{{singular}}DetailsForm = this.fb.group({
-      {{#each properties}}
-       {{name}}: new FormControl({ value: '', disabled: this.disableControls() }, [Validators.required]),
+      {{#each propertiesEditable}}
+          {{name}}: new FormControl({ value: '', disabled: this.disableControls() }, [Validators.required]),
       {{/each}}
     });
   }
 
   create{{singularWord}}() {
-    {{#each properties}}
+    {{#each propertiesEditable}}
         this.{{../singular}}.{{name}} = this.{{name}}Control.value;
     {{/each}}
 
@@ -82,7 +82,7 @@ export class Create{{singularWord}}Component implements OnInit {
     return !this.isEdit && !!this.userId;
   }
 
-  {{#each properties}}
+  {{#each propertiesEditable}}
     get {{name}}Control(): FormControl {
       return this.{{../singular}}DetailsForm.get('{{name}}') as FormControl;
     }

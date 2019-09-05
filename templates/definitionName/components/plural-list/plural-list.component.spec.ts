@@ -4,9 +4,7 @@ import { {{pluralWord}}ListComponent } from './{{plural}}-list.component';
 import { {{pluralWord}}Module} from '../../{{plural}}.module';
 import {SessionService} from '../../../login/services/session.service';
 import {AppRoutingModule} from '../../../app-routing.module';
-import {LoginComponent} from '../../../login/components/login/login.component';
 import {NotFoundComponent} from '../../../error/notfound/notfound.component';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
 import { {{pluralWord}}Service} from '../../services/{{plural}}.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -19,13 +17,13 @@ import {SharedModule} from '../../../shared/shared.module';
 import {MaterialModule} from '../../../material/material.module';
 import {UserService} from '../../../user/services/user.service';
 import {HomepageComponent} from '../../../homepage/homepage.component';
+import {AboutComponent} from '../../../about/about.component';
+import {DashboardComponent} from '../../../dashboard/dashboard/dashboard.component';
 import {Roles} from '../../../user/models/user.model';
-
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
+import {NgxChartsModule} from "@swimlane/ngx-charts";
 
 describe('{{pluralWord}}ListComponent', () => {
   let component: {{pluralWord}}ListComponent;
@@ -41,23 +39,29 @@ describe('{{pluralWord}}ListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        LoginComponent,
         NotFoundComponent,
-        HomepageComponent
+        HomepageComponent,
+        AboutComponent,
+        DashboardComponent
       ],
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
-        OktaAuthModule.initAuth(config),
+        {{#if isAuthenticated}}
+            OAuthModule.forRoot(),
+        {{/if}}
         AppRoutingModule,
         {{pluralWord}}Module,
         BrowserAnimationsModule,
         SharedModule,
-        MaterialModule
+        MaterialModule,
+        NgxChartsModule
       ],
       providers: [
         {{pluralWord}}Service,
-        OktaAuthService,
+        {{#if isAuthenticated}}
+            OAuthService,
+        {{/if}}
         SessionService,
         UserService
       ]

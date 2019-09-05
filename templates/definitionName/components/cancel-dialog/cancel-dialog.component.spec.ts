@@ -5,16 +5,13 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import {OktaAuthModule, OktaAuthService} from '@okta/okta-angular';
+{{#if isAuthenticated}}
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
+{{/if}}
 import {SessionService} from '../../../login/services/session.service';
 import { {{pluralWord}}Service} from '../../services/{{plural}}.service';
 import {environment} from '../../../../environments/environment';
 
-const config = {
-  issuer: environment.oktaIssuer,
-  redirectUri: environment.oktaRedirectUri,
-  clientId:  environment.oktaClientId
-};
 
 describe('CancelDialogComponent', () => {
   let component: CancelDialogComponent;
@@ -33,14 +30,20 @@ describe('CancelDialogComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
+      
+        {{#if isAuthenticated}}
+          OAuthModule.forRoot(),
+        {{/if}}
+
         ReactiveFormsModule,
-        MatDialogModule,
-        OktaAuthModule.initAuth(config)
+        MatDialogModule
       ],
       providers: [
         SessionService,
         {{pluralWord}}Service,
-        OktaAuthService,
+        {{#if isAuthenticated}}
+           OAuthService,
+        {{/if}}
         { provide: MatDialogRef, useValue: dialogMock }
       ]
     })

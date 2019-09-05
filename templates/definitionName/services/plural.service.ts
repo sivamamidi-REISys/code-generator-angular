@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { SessionService } from '../../login/services/session.service';
@@ -18,7 +18,17 @@ export class {{pluralWord}}Service {
 
   getListOf{{pluralWord}}() {
     const url = `${this.{{plural}}Path}/{{plural}}`;
-    return this.http.get(url);
+
+    return Observable.of({'content' : [
+      {
+        {{#each properties}}
+           '{{name}}': 'test {{name}}',
+         {{/each}}
+       }
+    ]});
+
+
+    //return this.http.get(url);
   }
   add{{singularWord}}(data) {
     const url: string = `${this.{{plural}}Path}/{{plural}}`;
@@ -27,7 +37,13 @@ export class {{pluralWord}}Service {
 
   get{{singularWord}}ById({{singular}}Id) {
     const url: string = `${this.{{plural}}Path}/{{plural}}/${ {{singular}}Id}`;
-    return this.http.get(url);
+    return Observable.of({
+      {{#each properties}}
+        '{{name}}': 'test {{name}}',
+     {{/each}}
+    });
+
+    //return this.http.get(url);
   }
 
   update{{singularWord}}({{singular}}) {

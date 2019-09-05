@@ -1,17 +1,23 @@
-<form class="usa-form" name="form" [formGroup]="{{singular}}DetailsForm">
-  <fieldset class="create{{singularWord}}Wrapper">
-    <div>
-      <legend class="usa-legend">New {{singularWord}}</legend>
-    </div>
-    {{#each properties}}
-    {{create-row}}
-    {{/each}}
-    <p>
-      <button class="usa-button usa-button--outline " (click)="cancelCreate('cancelCreate{{singularWord}}')"
-        id="cancelButton">Cancel</button>
-      <button class="usa-button usa-button--green" [disabled]="{{singular}}DetailsForm.invalid"
-      id="createButton" (click)="create{{singularWord}}()">Create</button>
-    </p>
-  </fieldset>
+<div class="formBody">
 
-</form>
+  <form class="usa-form" name="form" [formGroup]="{{singular}}DetailsForm">
+    <fieldset class="formWrapper">
+      <div>
+        <legend class="usa-legend">New {{singularWord}}</legend>
+      </div>
+      {{#each propertiesEditable}}
+      {{create-row}}
+      {{/each}}
+      <div class="actionButton">
+        <p>
+          <button class="usa-button usa-button--outline " (click)="cancelCreate('cancelCreate{{singularWord}}')"
+            id="cancelButton">Cancel</button>
+          <button class="usa-button usa-button--green" [disabled]="{{singular}}DetailsForm.invalid" id="createButton"
+            (click)="create{{singularWord}}()">Create</button>
+        </p>
+      </div>
+    </fieldset>
+
+  </form>
+
+</div>

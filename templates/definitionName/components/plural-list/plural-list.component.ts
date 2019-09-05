@@ -24,12 +24,11 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
   pageSizeOptions = [5, 10, 15, 20];
   pageSize: number = 10;
   page: number;
-  userRoles: any;
+  userRoles: any = [];
   userRolesObservable: any;
-  isEdit: boolean;
 
   displayedColumns = [
-    {{#each properties}}
+    {{#each propertiesList}}
     '{{name}}', 
     {{/each}}  
  'actions'];
@@ -44,12 +43,11 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
               private dialog: MatDialog,
               private readonly userService: UserService,
               private readonly changeDetectorRef: ChangeDetectorRef) {
-    this.userRoles = this.userService.getCurrentUserRoles();
+    //this.userRoles = this.userService.getCurrentUserRoles();
   }
 
   ngOnInit() {
     this.get{{pluralWord}}();
-    this.isEdit = this.router.url.indexOf('edit') !== -1;
     this.refresh{{pluralWord}}Observable = this.{{plural}}Service.refresh{{pluralWord}}.asObservable().subscribe({{plural}} => {
       if ( {{plural}} ) {
         this.{{plural}} = {{plural}};
