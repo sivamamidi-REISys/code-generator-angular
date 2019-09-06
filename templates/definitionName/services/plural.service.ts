@@ -22,7 +22,22 @@ export class {{pluralWord}}Service {
     return Observable.of({'content' : [
       {
         {{#each properties}}
-           '{{name}}': 'test {{name}}',
+           '{{name}}': 'test1 {{name}}',
+         {{/each}}
+       },
+       {
+        {{#each properties}}
+           '{{name}}': 'test2 {{name}}',
+         {{/each}}
+       },
+       {
+        {{#each properties}}
+           '{{name}}': 'test3 {{name}}',
+         {{/each}}
+       },
+       {
+        {{#each properties}}
+           '{{name}}': 'test4 {{name}}',
          {{/each}}
        }
     ]});

@@ -112,9 +112,7 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.dataSource.filterPredicate = function(data, filter: string): boolean {
-          return data.location.toLowerCase().includes(filter) ||
-            data.{{singular}}Name.toLowerCase().includes(filter) ||
-            data.{{singular}}Type.name.toLowerCase().includes(filter);
+          return data.{{properties.1.name}}.toString().toLowerCase().includes(filter);
         };
         this.loadContent = false;
       }

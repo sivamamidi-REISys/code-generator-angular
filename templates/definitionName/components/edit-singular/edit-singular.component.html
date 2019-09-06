@@ -1,12 +1,14 @@
-<div class="grid-row">
+<!-- <div class="grid-row">
   <div>
     <legend class="usa-legend">Edit {{singularWord}}</legend>
   </div>
-</div>
+</div> -->
 <!-- Title 1 and section-->
 <div class="grid-row header">
   <div class="tablet:grid-col-9 ">
+
     <h1 id="contractTitle" class="title">Details</h1>
+
   </div>
   <div class="grid-col-6 tablet:grid-col-3">
     <div class="date"></div>
@@ -14,9 +16,11 @@
 </div>
 <div class="grid-row">
   <div class="grid-col-12 tablet:grid-col-6">
-    {{#each propertiesReadOnly}}
-    {{edit-row-readonly ../singular}}
-    {{/each}}
+    <div class="chart_card">
+      {{#each propertiesReadOnly}}
+      {{edit-row-readonly ../singular}}
+      {{/each}}
+    </div>
   </div>
 </div>
 
@@ -26,10 +30,12 @@
       <form class="usa-form" name="form" *ngIf="{{singular}}" [formGroup]="{{singular}}DetailsForm"
         id="{{singular}}EditForm">
         <fieldset class="formWrapper">
+          <div class="chart_card">
 
-          {{#each propertiesEditable}}
-          {{edit-row}}
-          {{/each}}
+            {{#each propertiesEditable}}
+            {{edit-row}}
+            {{/each}}
+          </div>
           <div class="actionButton">
             <p>
 

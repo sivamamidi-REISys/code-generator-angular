@@ -141,7 +141,7 @@ function registerHelpers() {
         const result = `  <div class="section">
         <div class="grid-row">
           <div class="grid-col-4">
-            <div class="field"> ${this.name}</div>
+            <div class="field"> ${this.display}</div>
           </div>
           <div class="grid-col-4">
             <div class="content"> {{  ${singular}.${this.name} }}</div>
