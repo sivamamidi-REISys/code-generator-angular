@@ -34,8 +34,16 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
  'actions'];
 
   dataSource: any;
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  private paginator: MatPaginator;
+  private sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+  @ViewChild(MatSort, { static: false }) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
 
   constructor(public readonly {{plural}}Service: {{pluralWord}}Service,
               private readonly route: ActivatedRoute,
@@ -79,6 +87,13 @@ export class {{pluralWord}}ListComponent implements OnInit, OnDestroy, AfterView
 
   onPaginateChange(event) {
     console.log('event', event);
+  }
+
+  setDataSourceAttributes() {
+    if (this.paginator && this.sort) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
   }
 
   applyFilter(filterValue: any) {
