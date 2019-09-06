@@ -4,13 +4,16 @@ import { {{pluralWord}}Component} from './components/{{plural}}/{{plural}}.compo
 import { {{pluralWord}}ListComponent} from './components/{{plural}}-list/{{plural}}-list.component';
 import {Create{{singularWord}}Component} from './components/create-{{singular}}/create-{{singular}}.component';
 import {Edit{{singularWord}}Component} from './components/edit-{{singular}}/edit-{{singular}}.component';
+{{#if isAuthenticated}}
 import {AuthorizationGuard} from '../authorization.guard';
-
+{{/if}}
 const routes: Routes = [
   {
     path: '',
     component: {{pluralWord}}ListComponent,
+    {{#if isAuthenticated}}
     canActivate: [AuthorizationGuard],
+    {{/if}}
     data: {
       title: 'List of {{pluralWord}}'
     },
