@@ -6,59 +6,43 @@ exports.configuration = {
     appName: 'agency-ui'
   },
   "definitions": {
-    "Announcement": {
+    "TravelPlan": {
       "actionType": "crud",
       "isAuthenticated" : true,
-      "pluralWord": "Announcements",
-      "uniqueId": "announcementId",
+      "pluralWord": "TravelPlans",
+      "uniqueId": "planId",
       "properties": [
         {
-          "name": "announcementId",
-          "display": "id",
+          "name": "planId",
+          "display": "Plan Id",
           "type": "string",
           "required": true,
           "isEdit": false,
           "isInList": false
         },
         {
-          "name": "announcementName",
-          "display": "Announcement Name",
-          "type": "string",
-          "required": true,
-          "isEdit": true,
-          "isInList": true
-        },
-        {
-          "name": "publishedDate",
-          "display": "Published Date",
-          "type": "string",
-          "required": true,
-          "isEdit": true,
-          "isInList": true
-        },
-        {
-          "name": "responseDate",
-          "display": "Response Date",
-          "type": "string",
-          "required": true,
-          "isEdit": true,
-          "isInList": true
-        },
-        {
-          "name": "agencyName",
-          "display": "Agency Name",
+          "name": "startDate",
+          "display": "Start Date",
           "type": "string",
           "required": true,
           "isEdit": false,
           "isInList": true
         },
         {
-          "name": "office",
-          "display": "Office",
+          "name": "endDate",
+          "display": "End Date",
           "type": "string",
           "required": true,
           "isEdit": false,
           "isInList": true
+        },
+        {
+          "name": "recommendation",
+          "display": "Recommendation",
+          "type": "string",
+          "required": true,
+          "isEdit": true,
+          "isInList": false
         },
         {
           "name": "status",
@@ -66,8 +50,17 @@ exports.configuration = {
           "type": "string",
           "required": true,
           "isEdit": false,
-          "isInList": false
-        }
+          "isInList": true
+        },
+        {
+          "name": "approvedDestination",
+          "display": "Approved Destination",
+          "type": "string",
+          "required": true,
+          "isEdit": false,
+          "isInList": true
+        },
+        
       ]
     }
   }
