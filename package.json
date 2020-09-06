@@ -2,7 +2,7 @@
   "devDependencies": {
     "async-file": "^2.0.2",
     "fs-extra": "^8.0.1",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.5.3",
     "dree": "^2.1.10"
   }
 }
